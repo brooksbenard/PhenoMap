@@ -1,0 +1,67 @@
+# Package index
+
+## Prognostic scoring
+
+Score expression data with weighted sum of prognostic gene signatures.
+
+- [`PhenoMap()`](https://brooksbenard.github.io/PhenoMapR/reference/PhenoMap.md)
+  : Score Expression Data with Prognostic Gene Signatures
+- [`normalize_scores()`](https://brooksbenard.github.io/PhenoMapR/reference/normalize_scores.md)
+  : Calculate Z-Scores
+- [`add_scores_to_seurat()`](https://brooksbenard.github.io/PhenoMapR/reference/add_scores_to_seurat.md)
+  : Add Scores to Seurat Object
+- [`add_scores_to_sce()`](https://brooksbenard.github.io/PhenoMapR/reference/add_scores_to_sce.md)
+  : Add Scores to SingleCellExperiment Object
+
+## Reference data and utilities
+
+List cancer types, check gene coverage, get top prognostic genes, and
+helpers.
+
+- [`list_cancer_types()`](https://brooksbenard.github.io/PhenoMapR/reference/list_cancer_types.md)
+  : List Available Cancer Types
+- [`get_gene_coverage()`](https://brooksbenard.github.io/PhenoMapR/reference/get_gene_coverage.md)
+  : Get Gene Coverage
+- [`get_top_prognostic_genes()`](https://brooksbenard.github.io/PhenoMapR/reference/get_top_prognostic_genes.md)
+  : Get Top Prognostic Genes
+- [`get_celltype_palette()`](https://brooksbenard.github.io/PhenoMapR/reference/get_celltype_palette.md)
+  : Get Cell Type Color Palette
+- [`cell_type_colors`](https://brooksbenard.github.io/PhenoMapR/reference/cell_type_colors.md)
+  : Default Cell Type Color Palette
+- [`load_rds_fast()`](https://brooksbenard.github.io/PhenoMapR/reference/load_rds_fast.md)
+  : Load RDS File with Fast Parallel Decompression
+
+## Reference datasets (internal)
+
+Built-in reference data; use list_cancer_types() and PhenoMap() in
+practice.
+
+- [`precog`](https://brooksbenard.github.io/PhenoMapR/reference/precog.md)
+  : PRECOG Prognostic Z-Scores
+- [`tcga`](https://brooksbenard.github.io/PhenoMapR/reference/tcga.md) :
+  TCGA Prognostic Z-Scores
+- [`pediatric`](https://brooksbenard.github.io/PhenoMapR/reference/pediatric.md)
+  : Pediatric Cancer Prognostic Z-Scores
+- [`ici`](https://brooksbenard.github.io/PhenoMapR/reference/ici.md) :
+  Immune Checkpoint Inhibitor (ICI) Prognostic Z-Scores
+
+## Custom reference derivation
+
+Derive reference z-scores from bulk expression and phenotype.
+
+- [`derive_reference_from_bulk()`](https://brooksbenard.github.io/PhenoMapR/reference/derive_reference_from_bulk.md)
+  : Derive Reference Z-Scores from Bulk Expression and Phenotype
+
+## Prognostic group analysis
+
+Define adverse/favorable groups and find marker genes.
+
+- [`define_prognostic_groups()`](https://brooksbenard.github.io/PhenoMapR/reference/define_prognostic_groups.md)
+  : Define Prognostic Groups (Top and Bottom Percentile)
+- [`find_prognostic_markers()`](https://brooksbenard.github.io/PhenoMapR/reference/find_prognostic_markers.md)
+  : Find Unique Marker Genes for Adverse and Favorable Prognostic Groups
+
+## Visualization
+
+- [`plot_score_distribution()`](https://brooksbenard.github.io/PhenoMapR/reference/plot_score_distribution.md)
+  : Plot Score Distribution

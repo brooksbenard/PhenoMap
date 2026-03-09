@@ -1,0 +1,123 @@
+# Find Unique Marker Genes for Adverse and Favorable Prognostic Groups
+
+Uses Seurat's `FindMarkers` to perform differential expression between
+the top (adverse) and bottom (favorable) prognostic groups versus the
+rest. Requires the Seurat package.
+
+## Usage
+
+``` r
+find_prognostic_markers(
+  expression,
+  group_labels,
+  group_column = NULL,
+  cell_id_column = "cell_id",
+  assay = NULL,
+  slot = "data",
+  test.use = c("wilcox", "t", "roc", "negbinom", "poisson", "LR"),
+  min.pct = 0.1,
+  logfc.threshold = 0.25,
+  pval_threshold = 0.05,
+  verbose = TRUE,
+  max_cells_per_ident = 5000L,
+  ...
+)
+```
+
+## Arguments
+
+- expression:
+
+  Expression matrix (genes x cells), a Seurat object, or a
+  SingleCellExperiment. Must match cells in `group_labels`.
+
+- group_labels:
+
+  Either a character vector of group labels (`"Most Adverse"`,
+  `"Most Favorable"`, `"Other"`) in the same order as columns of
+  `expression`, or a data.frame from
+  [`define_prognostic_groups()`](https://brooksbenard.github.io/PhenoMapR/reference/define_prognostic_groups.md)
+  (see `group_column`).
+
+- group_column:
+
+  If `group_labels` is a data.frame, the name of the column containing
+  `"Most Adverse"` / `"Most Favorable"` / `"Other"`.
+
+- cell_id_column:
+
+  If `group_labels` is a data.frame, the column name for cell/sample IDs
+  (default `"cell_id"`).
+
+- assay:
+
+  Assay name for Seurat/SCE (e.g. `"RNA"`).
+
+- slot:
+
+  Layer for Seurat: `"data"`, `"counts"`, or `"scale.data"` (default
+  `"data"`).
+
+- test.use:
+
+  Seurat `test.use`: `"wilcox"` (default), `"t"`, `"roc"`, `"negbinom"`,
+  `"poisson"`, or `"LR"`.
+
+- min.pct:
+
+  Minimum fraction of cells expressing the gene in either group (default
+  0.1). Passed to `FindMarkers`.
+
+- logfc.threshold:
+
+  Minimum absolute log2 fold change (default 0.25). Passed to
+  `FindMarkers`.
+
+- pval_threshold:
+
+  Maximum unadjusted p-value to include (default 0.05).
+
+- verbose:
+
+  Print progress messages (default TRUE).
+
+- max_cells_per_ident:
+
+  When any prognostic group exceeds this many cells, subsample to this
+  limit before FindMarkers (default 5000). Reduces memory for large
+  objects. Set to `Inf` to disable.
+
+- ...:
+
+  Additional arguments passed to
+  [`Seurat::FindMarkers`](https://satijalab.org/seurat/reference/FindMarkers.html).
+
+## Value
+
+A list with:
+
+- `adverse_markers`: data.frame of genes that are markers of the adverse
+  (top score) group (vs rest).
+
+- `favorable_markers`: data.frame of genes that are markers of the
+  favorable (bottom score) group (vs rest).
+
+Each data.frame has columns: `gene`, `avg_log2FC`, `pct_in_group`,
+`pct_rest`, `p_val`, `p_adj`.
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+scores <- PhenoMap(seurat_obj, reference = "precog", cancer_type = "BRCA")
+groups <- define_prognostic_groups(scores, percentile = 0.05)
+markers <- find_prognostic_markers(
+  seurat_obj,
+  group_labels = groups,
+  group_column = "prognostic_group_weighted_sum_score_precog_BRCA",
+  cell_id_column = "cell_id"
+)
+head(markers$adverse_markers)
+head(markers$favorable_markers)
+} # }
+```
