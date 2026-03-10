@@ -1,11 +1,10 @@
 # Articles
 
-### Get started
+### Introduction
 
-Getting started with PhenoMapR.
+Introduction to PhenoMapR.
 
-- [Get
-  started](https://brooksbenard.github.io/PhenoMapR/articles/get-started.md):
+- [Introduction](https://brooksbenard.github.io/PhenoMapR/articles/get-started.md):
 
 ### Vignettes
 

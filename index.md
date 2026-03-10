@@ -1,4 +1,4 @@
-# [![](reference/figures/PhenoMapR_logo.png)](https://brooksbenard.github.io/PhenoMapR) PhenoMapR
+# PhenoMapR
 
 **PhenoMapR** is a semi-supervised method to map phenotypes associated
 with bulk gene expression onto bulk, single cell, and spatial
@@ -17,7 +17,3 @@ visualization](reference/figures/PhenoMapR_visualization.png)
 if (!require(devtools)) install.packages("devtools")
 devtools::install_github("brooksbenard/PhenoMapR")
 ```
-
-Dependencies (e.g. `dplyr`, `Matrix`, `glue`, `progress`) will be
-installed automatically. For Seurat/SCE support, install suggested
-packages as needed.
