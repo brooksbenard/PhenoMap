@@ -2,6 +2,9 @@
 
 ## Introduction
 
+![PhenoMapR stacked
+modalities](../reference/figures/PhenoMapR_stacked_modalities.png)
+
 Single-cell and spatial transcriptomics methods provide an improved
 understanding of the cell types and spatial organization underlying
 healthy and malignant biology. However, many single-cell and spatial
