@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Introduction • PhenoMapR</title>
+<title>Overview • PhenoMapR</title>
 <script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
-<meta property="og:title" content="Introduction">
+<meta property="og:title" content="Overview">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -68,7 +68,7 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Introduction</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Overview</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/brooksbenard/PhenoMapR/blob/main/vignettes/get-started.Rmd" class="external-link"><code>vignettes/get-started.Rmd</code></a></small>
@@ -82,35 +82,61 @@
 </h2>
 <p><img src="../reference/figures/PhenoMapR_stacked_modalities.png" alt="PhenoMapR stacked modalities" align="right" width="390"></p>
 <p>Single-cell and spatial transcriptomics methods provide an improved
-understanding of the cell types and spatial organization underlying
-healthy and malignant biology. However, many single-cell and spatial
-studies lack sufficient sample size for robust associations between a
-sample phenotype (e.g. overall survival) and cell types or spatial
-locations. In contrast, lower resolution methods such as bulk gene
-expression profiling have been applied at scale in large,
+resolution and understanding of the cell types and spatial organization
+underlying healthy and malignant biology. However, many single-cell and
+spatial studies lack sufficient sample size for robust associations
+between a sample phenotype (e.g. overall survival) and cell types or
+spatial locations. In contrast, lower resolution methods such as bulk
+gene expression profiling have been applied at scale in large,
 clinically-annotated datasets, providing robust signatures for phenotype
-associations. PhenoMapR bridges this gap between the improved resolution
-of single-cell/spatial approaches and the bulk phenotype signals by
-mapping the phenotypic signal directly onto individual cells and spatial
-locations.</p>
-<p>PhenoMapR has some beneficial functionality:</p>
-<ul>
-<li>
-<strong>Works with Multiple Input Formats</strong>: Supports
-matrices, data.frames, Seurat objects, SingleCellExperiment,
-SpatialExperiment, and AnnData</li>
-<li>
-<strong>Built-in Bulk Cancer Phenotype References</strong>: Adult
-PRECOG, TCGA, Pediatric PRECOG, and ICI PRECOG datasets</li>
-<li>
-<strong>Flexible Scoring</strong>: Cell/spot-level or sample
-pseudobulk scoring</li>
-<li>
-<strong>Custom Signatures</strong>: Generate and/or use your own
-z-score references</li>
-<li>
-<strong>Efficient</strong>: Optimized approach for fast scoring</li>
-</ul>
+associations such as outcomes across cancers (e.g. <a href="https://precog.stanford.edu/" class="external-link">PRECOG 2.0</a>). <strong>PhenoMapR
+bridges this gap between the improved resolution of single-cell/spatial
+approaches and the phenotype signals identified across bulk expression
+studies</strong> by mapping the phenotypic signal directly onto
+individual cells and spatial locations.</p>
+<hr>
+</div>
+<div class="section level2">
+<h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
+</h2>
+<p>PhenoMapR is intended to be a flexible framework for mapping
+phenotypic signal across biological data modalities. Although developed
+with a cancer-centric focus, PhenoMapR has some broad functionality that
+can be applied outside of cancer:</p>
+<table class="table">
+<colgroup>
+<col width="43%">
+<col width="56%">
+</colgroup>
+<thead><tr class="header">
+<th>Feature</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><strong>Works with Multiple Input Formats</strong></td>
+<td>Supports matrices, data.frames, Seurat objects,
+SingleCellExperiment, SpatialExperiment, and AnnData</td>
+</tr>
+<tr class="even">
+<td><strong>Built-in Bulk Cancer Phenotype References</strong></td>
+<td>TCGA &amp; Adult/Pediatric/Immunotherapy PRECOG datasets</td>
+</tr>
+<tr class="odd">
+<td><strong>Flexible Scoring</strong></td>
+<td>Cell/spot-level or sample pseudobulk scoring</td>
+</tr>
+<tr class="even">
+<td><strong>Custom Signatures</strong></td>
+<td>Generate and/or use your own z-score phenotype references</td>
+</tr>
+<tr class="odd">
+<td><strong>Efficient</strong></td>
+<td>Optimized approach for ultra-fast scoring</td>
+</tr>
+</tbody>
+</table>
+<hr>
 </div>
 <div class="section level2">
 <h2 id="getting-started">Getting Started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
@@ -120,37 +146,59 @@ basic use of this function takes a <code>gene x sample/cell/spot</code>
 expression file <strong>+</strong> reference phenotype
 <code>gene x z-score signature</code> and generates a
 <code>PhenoMapR score x sample/cell/spot</code> dataframe. For
-single-cell and spatial inputs, a sample-level PhenoMap score can be
+single-cell and spatial inputs, a sample-level PhenoMapR score can be
 generated using the pseudobulk argument.</p>
 <p><strong><code><a href="../reference/PhenoMap.html">PhenoMap()</a></code> arguments</strong></p>
-<ul>
-<li>
-<strong>expression</strong>: Expression data (matrix, Seurat, SCE,
-etc.)</li>
-<li>
-<strong>reference</strong>: Reference dataset name or custom
-data.frame</li>
-<li>
-<strong>cancer_type</strong>: Cancer type label (required for
-built-in references)</li>
-<li>
-<strong>z_score_cutoff</strong>: Absolute z-score threshold
-(default: 2)</li>
-<li>
-<strong>pseudobulk</strong>: Aggregate before scoring? (default:
-FALSE)</li>
-<li>
-<strong>group_by</strong>: Grouping variable for pseudobulk</li>
-<li>
-<strong>assay</strong>: Assay name for Seurat/SCE objects</li>
-<li>
-<strong>slot</strong>: Seurat slot (“data”, “counts”,
-“scale.data”)</li>
-<li>
-<strong>verbose</strong>: Print progress messages</li>
-</ul>
+<table class="table">
+<colgroup>
+<col width="43%">
+<col width="56%">
+</colgroup>
+<thead><tr class="header">
+<th>Argument</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><strong>expression</strong></td>
+<td>Expression data (matrix, Seurat, SCE, etc.)</td>
+</tr>
+<tr class="even">
+<td><strong>reference</strong></td>
+<td>Reference dataset name or custom data.frame</td>
+</tr>
+<tr class="odd">
+<td><strong>cancer_type</strong></td>
+<td>Cancer type label (required for built-in references)</td>
+</tr>
+<tr class="even">
+<td><strong>z_score_cutoff</strong></td>
+<td>Absolute z-score threshold (default: 2)</td>
+</tr>
+<tr class="odd">
+<td><strong>pseudobulk</strong></td>
+<td>Aggregate before scoring? (default: FALSE)</td>
+</tr>
+<tr class="even">
+<td><strong>group_by</strong></td>
+<td>Grouping variable for pseudobulk</td>
+</tr>
+<tr class="odd">
+<td><strong>assay</strong></td>
+<td>Assay name for Seurat/SCE objects</td>
+</tr>
+<tr class="even">
+<td><strong>slot</strong></td>
+<td>Seurat slot (“data”, “counts”, “scale.data”)</td>
+</tr>
+<tr class="odd">
+<td><strong>verbose</strong></td>
+<td>Print progress messages</td>
+</tr>
+</tbody>
+</table>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Load **PhenoMapR** in your R session using:</span></span>
+<code class="sourceCode R"><span><span class="co"># Load PhenoMapR in your R session using:</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://brooksbenard.github.io/PhenoMapR">PhenoMapR</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Score a bulk expression matrix</span></span>
@@ -382,10 +430,21 @@ samples with that reference.</td>
 </tr>
 </tbody>
 </table>
+<p><strong>Vignette data:</strong> The article datasets are hosted on <a href="https://drive.google.com/drive/folders/1rKGZBX7sa_Iq8AJb1wcxiRc3oD6v6B5n" class="external-link">Google
+Drive</a> (too large for the repo). When you run or knit an article,
+missing files are downloaded automatically if the
+<strong>googledrive</strong> package is installed
+(e.g. <code>install.packages("PhenoMapR", dependencies = TRUE)</code>).
+You can also <a href="https://drive.google.com/drive/folders/1rKGZBX7sa_Iq8AJb1wcxiRc3oD6v6B5n" class="external-link">download
+the files manually</a> into <code>vignettes/</code> and run from the
+package root. See <code>vignettes/README.md</code> in the repo for all
+options.</p>
 </div>
 <div class="section level2">
 <h2 id="advanced-usage">Advanced Usage<a class="anchor" aria-label="anchor" href="#advanced-usage"></a>
 </h2>
+<p>Although developed to provide a cancer-centric focus, PhenoMapR has
+some broad functionality that can be applied outside of cancer</p>
 <div class="section level3">
 <h3 id="custom-reference-data">Custom Reference Data<a class="anchor" aria-label="anchor" href="#custom-reference-data"></a>
 </h3>

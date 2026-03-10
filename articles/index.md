@@ -4,7 +4,7 @@
 
 Introduction to PhenoMapR.
 
-- [Introduction](https://brooksbenard.github.io/PhenoMapR/articles/get-started.md):
+- [Overview](https://brooksbenard.github.io/PhenoMapR/articles/get-started.md):
 
 ### Vignettes
 

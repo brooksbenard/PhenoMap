@@ -92,7 +92,7 @@ Define adverse/favorable groups and find marker genes.
 
 Introduction to PhenoMapR.
 
-- [Introduction](https://brooksbenard.github.io/PhenoMapR/articles/get-started.md):
+- [Overview](https://brooksbenard.github.io/PhenoMapR/articles/get-started.md):
 
 ### Vignettes
 
