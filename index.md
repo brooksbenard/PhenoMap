@@ -20,7 +20,8 @@ devtools::install_github("brooksbenard/PhenoMapR")
 
 ## Quick Start
 
-Basic PhenoMapR requirements (if using built-in cancer references):  
+**Basic PhenoMapR requirements (if using built-in cancer references):**
+
 **1.** User-provided gene expression input (bulk, single-cell, or
 spatial).
 
