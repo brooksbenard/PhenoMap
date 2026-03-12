@@ -284,6 +284,11 @@ expr_path_253260 <- "vignettes/GSE253260_expression.rds"
 info_path_253260 <- "vignettes/GSE253260_info.rds"
 
 if (!file.exists(expr_path_253260) && requireNamespace("googledrive", quietly = TRUE)) {
+  # Ensure vignette directory exists before downloading
+  dest_dir_253260 <- dirname(expr_path_253260)
+  if (!dir.exists(dest_dir_253260)) {
+    dir.create(dest_dir_253260, recursive = TRUE, showWarnings = FALSE)
+  }
   googledrive::drive_deauth()
   # Expression matrix (GSE253260 bulk expression)
   tryCatch(
@@ -310,9 +315,21 @@ if (!file.exists(expr_path_253260) && requireNamespace("googledrive", quietly = 
 }
 ```
 
-    ## Could not download GSE253260 expression from Google Drive: Failed to open file vignettes/GSE253260_expression.rds.
+    ## File downloaded:
 
-    ## Could not download GSE253260 info from Google Drive: Failed to open file vignettes/GSE253260_info.rds.
+    ## • GSE253260_expression.rds <id: 1YuZQjGY6CTt-uicxRqYzp9t_tnIuQN4R>
+
+    ## Saved locally as:
+
+    ## • vignettes/GSE253260_expression.rds
+
+    ## File downloaded:
+
+    ## • GSE253260_info.rds <id: 1Tpb8JC-2wO0Qppi5kM1vRuYTwBD1vY8f>
+
+    ## Saved locally as:
+
+    ## • vignettes/GSE253260_info.rds
 
 ``` r
 if (file.exists(expr_path_253260)) {
@@ -348,7 +365,12 @@ if (file.exists(expr_path_253260)) {
 }
 ```
 
-    ## GSE253260 expression file not found at vignettes/GSE253260_expression.rds; skipping GSE253260 example.
+    ## GSE253260 expression: 317 genes × 28858 samples
+
+    ## Detected input type: matrix
+
+    ## Warning in calculate_weighted_scores(expression_matrix = expr_info$matrix, : No
+    ## common genes found between expression and reference data for Pancreatic
 
 ## 7. Summary
 
