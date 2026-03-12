@@ -269,7 +269,104 @@ ggsurvplot(fit_met, data = dat_met, palette = pal_km, risk.table = FALSE,
 
 ![](gse205154-bulk-survival_files/figure-html/km-metastatic-1.png)
 
-## 6. Summary
+## 6. Additional example: GSE253260 bulk expression
+
+In many bulk expression studies, only the expression matrix is available
+without matched outcomes. Here we show how to score an independent bulk
+expression dataset (GSE253260) against the PRECOG primary pancreatic
+signature.
+
+``` r
+# Paths to preprocessed GSE253260 bulk expression (genes x samples) and optional
+# phenotype/info RDS files. For pkgdown and reproducible builds, download from
+# the public Google Drive links if the files are not present locally.
+expr_path_253260 <- "vignettes/GSE253260_expression.rds"
+info_path_253260 <- "vignettes/GSE253260_info.rds"
+
+if (!file.exists(expr_path_253260) && requireNamespace("googledrive", quietly = TRUE)) {
+  googledrive::drive_deauth()
+  # Expression matrix
+  tryCatch(
+    googledrive::drive_download(
+      googledrive::as_id("13womOrSDbQVsBWVH06Z91eD5-2PeFyoH"),
+      path = expr_path_253260,
+      overwrite = TRUE
+    ),
+    error = function(e) {
+      message("Could not download GSE253260 expression from Google Drive: ", conditionMessage(e))
+    }
+  )
+  # Optional: phenotype/info RDS (not required for scoring in this section)
+  tryCatch(
+    googledrive::drive_download(
+      googledrive::as_id("14UzRBPTsLN7D3d57eNaWTVwAP8ObCDwH"),
+      path = info_path_253260,
+      overwrite = TRUE
+    ),
+    error = function(e) {
+      message("Could not download GSE253260 info from Google Drive: ", conditionMessage(e))
+    }
+  )
+}
+```
+
+    ## Could not download GSE253260 expression from Google Drive: ℹ In index: 1.
+    ## Caused by error in `.f()`:
+    ## ! Client error: (404) Not Found
+    ## File not found: 13womOrSDbQVsBWVH06Z91eD5-2PeFyoH.
+    ## • message: File not found: 13womOrSDbQVsBWVH06Z91eD5-2PeFyoH.
+    ## • domain: global
+    ## • reason: notFound
+    ## • location: fileId
+    ## • locationType: parameter
+
+    ## Could not download GSE253260 info from Google Drive: ℹ In index: 1.
+    ## Caused by error in `.f()`:
+    ## ! Client error: (404) Not Found
+    ## File not found: 14UzRBPTsLN7D3d57eNaWTVwAP8ObCDwH.
+    ## • message: File not found: 14UzRBPTsLN7D3d57eNaWTVwAP8ObCDwH.
+    ## • domain: global
+    ## • reason: notFound
+    ## • location: fileId
+    ## • locationType: parameter
+
+``` r
+if (file.exists(expr_path_253260)) {
+  bulk_253260 <- readRDS(expr_path_253260)
+  if (!is.matrix(bulk_253260) && !is.data.frame(bulk_253260)) {
+    stop("GSE253260 object must be a matrix or data.frame with genes in rows")
+  }
+  if (is.data.frame(bulk_253260)) bulk_253260 <- as.matrix(bulk_253260)
+
+  message("GSE253260 expression: ", nrow(bulk_253260), " genes × ", ncol(bulk_253260), " samples")
+
+  # Score samples with PRECOG primary pancreatic signature
+  scores_253260 <- PhenoMap(
+    expression = bulk_253260,
+    reference = "precog",
+    cancer_type = "Pancreatic",
+    verbose = TRUE
+  )
+
+  score_col_253260 <- grep("Pancreatic$", colnames(scores_253260), value = TRUE)[1]
+  if (!is.na(score_col_253260)) {
+    print(plot_score_distribution(
+      scores_253260,
+      score_column = score_col_253260,
+      main = "GSE253260: PRECOG Pancreatic score"
+    ))
+  }
+} else {
+  message(
+    "GSE253260 expression file not found at ", expr_path_253260,
+    "; skipping GSE253260 example."
+  )
+}
+```
+
+    ## GSE253260 expression file not found at vignettes/GSE253260_expression.rds; skipping GSE253260 example.
+
+## 7. Summary
 
 PhenoMapR can take a bulk expression dataset and assign prognostic risk
 scores and significantly stratify outcomes in both primary and
@@ -280,7 +377,7 @@ or reported. In these cases, PhenoMapR can nominate samples that are on
 the extremes of the phenotype space (e.g. survival) and help define
 sample groupings.
 
-## 7. References
+## 8. References
 
 - **GSE205154**: Sears et al. Bulk RNA-Seq gene expression for 289
   primary and metastatic PDAC samples. *Nature Cancer* (2025). [GEO:
@@ -325,15 +422,16 @@ sessionInfo()
     ##  [1] sass_0.4.10        generics_0.1.4     tidyr_1.3.2        rstatix_0.7.3     
     ##  [5] lattice_0.22-9     digest_0.6.39      magrittr_2.0.4     evaluate_1.0.5    
     ##  [9] grid_4.5.3         RColorBrewer_1.1-3 fastmap_1.2.0      jsonlite_2.0.0    
-    ## [13] Matrix_1.7-4       backports_1.5.0    Formula_1.2-5      gridExtra_2.3     
-    ## [17] purrr_1.2.1        scales_1.4.0       textshaping_1.0.5  jquerylib_0.1.4   
-    ## [21] abind_1.4-8        cli_3.6.5          rlang_1.1.7        splines_4.5.3     
-    ## [25] withr_3.0.2        cachem_1.1.0       yaml_2.3.12        otel_0.2.0        
-    ## [29] tools_4.5.3        ggsignif_0.6.4     dplyr_1.2.0        broom_1.0.12      
-    ## [33] vctrs_0.7.1        R6_2.6.1           lifecycle_1.0.5    fs_1.6.7          
-    ## [37] car_3.1-5          htmlwidgets_1.6.4  ragg_1.5.1         pkgconfig_2.0.3   
-    ## [41] desc_1.4.3         pkgdown_2.2.0      pillar_1.11.1      bslib_0.10.0      
-    ## [45] gtable_0.3.6       glue_1.8.0         systemfonts_1.3.2  xfun_0.56         
-    ## [49] tibble_3.3.1       tidyselect_1.2.1   knitr_1.51         farver_2.1.2      
-    ## [53] htmltools_0.5.9    carData_3.0-6      rmarkdown_2.30     labeling_0.4.3    
-    ## [57] compiler_4.5.3     S7_0.2.1
+    ## [13] Matrix_1.7-4       backports_1.5.0    Formula_1.2-5      googledrive_2.1.2 
+    ## [17] gridExtra_2.3      httr_1.4.8         purrr_1.2.1        scales_1.4.0      
+    ## [21] textshaping_1.0.5  jquerylib_0.1.4    abind_1.4-8        cli_3.6.5         
+    ## [25] rlang_1.1.7        splines_4.5.3      withr_3.0.2        cachem_1.1.0      
+    ## [29] yaml_2.3.12        otel_0.2.0         tools_4.5.3        gargle_1.6.1      
+    ## [33] ggsignif_0.6.4     dplyr_1.2.0        curl_7.0.0         broom_1.0.12      
+    ## [37] vctrs_0.7.1        R6_2.6.1           lifecycle_1.0.5    fs_1.6.7          
+    ## [41] car_3.1-5          htmlwidgets_1.6.4  ragg_1.5.1         pkgconfig_2.0.3   
+    ## [45] desc_1.4.3         pkgdown_2.2.0      pillar_1.11.1      bslib_0.10.0      
+    ## [49] gtable_0.3.6       glue_1.8.0         systemfonts_1.3.2  xfun_0.56         
+    ## [53] tibble_3.3.1       tidyselect_1.2.1   knitr_1.51         farver_2.1.2      
+    ## [57] htmltools_0.5.9    carData_3.0-6      rmarkdown_2.30     labeling_0.4.3    
+    ## [61] compiler_4.5.3     S7_0.2.1
