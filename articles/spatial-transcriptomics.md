@@ -96,8 +96,8 @@ score_col <- grep("weighted_sum_score", names(scores_spatial), value = TRUE)[1]
 summary(seurat@meta.data[[score_col]])
 ```
 
-    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ## -63.235 -13.566  -2.528  -1.761   9.433  85.550
+    ##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+    ## -549.964  -27.319   -1.856   -5.566   22.599  769.170
 
 ## Score distribution
 
@@ -242,7 +242,7 @@ if (n_levels >= 2L && n_levels <= 100L) {
 }
 ```
 
-    ## Single or too many annotation levels (1); skipping boxplot.
+![](spatial-transcriptomics_files/figure-html/score-by-annotation-1.png)
 
 ## Define prognostic groups
 
@@ -261,7 +261,7 @@ table(seurat@meta.data[[group_col]], useNA = "ifany")
 
     ## 
     ##   Most Adverse Most Favorable          Other 
-    ##             15             15            270
+    ##            999            999          17981
 
 ## Spatial plots: where do PhenoMapR scores localize?
 
@@ -390,6 +390,8 @@ if (exists("has_spatial_coords") && has_spatial_coords && !is.null(spatial_df$ce
 }
 ```
 
+![](spatial-transcriptomics_files/figure-html/spatial-celltype-plot-1.png)
+
 ### Where raw PhenoMapR scores are
 
 Spatial map of PhenoMapR score (z-scaled for color gradient). Blue =
@@ -515,21 +517,21 @@ if (!is.null(group_col)) {
 
     ## Adverse markers (top 5):
 
-    ##          p_val avg_log2FC pct_in_group pct_rest gene        p_adj
-    ## 1 7.098332e-10  11.319586        0.133    0.000  AK5 1.064750e-06
-    ## 2 1.639154e-08   4.340578        0.200    0.007  SRM 2.458731e-05
-    ## 3 1.038395e-07   2.416833        0.467    0.063 ECE1 1.557593e-04
-    ## 4 1.005341e-06   3.997894        0.133    0.004  FGR 1.508012e-03
-    ## 5 1.005341e-06   4.541735        0.133    0.004 NCDN 1.508012e-03
+    ##           p_val avg_log2FC pct_in_group pct_rest    gene         p_adj
+    ## 1 8.189888e-234   2.760720        0.433    0.069   EPHA2 1.228483e-230
+    ## 2 1.417689e-222   2.810215        0.448    0.082  SLC2A1 2.126534e-219
+    ## 3 4.403854e-192   2.139456        0.544    0.144   BCAR3 6.605781e-189
+    ## 4 8.307727e-190   2.184138        0.404    0.073 TINAGL1 1.246159e-186
+    ## 5 4.163348e-135   1.208025        0.683    0.270    CAP1 6.245021e-132
 
     ## Favorable markers (top 5):
 
-    ##          p_val avg_log2FC pct_in_group pct_rest       gene        p_adj
-    ## 1 4.142870e-07   2.962251        0.200    0.011 AL356488.2 0.0006214304
-    ## 2 9.186476e-07   4.781275        0.133    0.004       ROR1 0.0013779713
-    ## 3 1.005341e-06   3.611003        0.133    0.004      NBPF1 0.0015080122
-    ## 4 3.925661e-05   1.663949        0.133    0.007       RHOC 0.0588849122
-    ## 5 1.082102e-04   1.609730        0.533    0.137     TMEM59 0.1623153249
+    ##           p_val avg_log2FC pct_in_group pct_rest     gene         p_adj
+    ## 1  0.000000e+00   2.822997        0.925    0.292    NEGR1  0.000000e+00
+    ## 2 3.866681e-253   3.337412        0.460    0.078    AGBL4 5.800021e-250
+    ## 3 1.783071e-190   1.975511        0.404    0.072    TTLL7 2.674606e-187
+    ## 4 3.123498e-189   3.050087        0.297    0.036 KIAA1324 4.685247e-186
+    ## 5 7.609929e-182   1.610949        0.780    0.291     ROR1 1.141489e-178
 
 ### Step 2: Heatmap of adverse vs. favorable markers
 
@@ -859,15 +861,15 @@ if (is.null(group_col)) {
 ```
 
     ## Using cell type column: CellType 
-    ## Groups with >= 10  cells: Adverse_CD8T, Favorable_CD8T 
-    ## Using assay for FindAllMarkers: Spatial (full object, ncol= 300 )
+    ## Groups with >= 10  cells: Adverse_Acinar, Adverse_Dendritic, Adverse_Ductal, Adverse_Endothelial, Adverse_Fibroblast, Adverse_Macrophage, Adverse_Plasma, Favorable_Alpha, Favorable_Beta, Favorable_Dendritic, Favorable_Ductal, Favorable_Endothelial, Favorable_Fibroblast, Favorable_Plasma, Favorable_Schwann 
+    ## Using assay for FindAllMarkers: Spatial (full object, ncol= 19979 )
 
     ## No markers with min.pct=0.05, logfc.threshold=0.1, return.thresh=0.05; retrying with relaxed thresholds...
 
     ## Retrying with return.thresh=1 (return all genes regardless of p-value)...
 
     ## FindAllMarkers returned 0 marker genes.
-    ## Diagnostic: cells per group: Adverse_CD8T = 15, Favorable_CD8T = 15, Other = 270 
+    ## Diagnostic: cells per group: Adverse_Acinar = 20, Adverse_Dendritic = 76, Adverse_Ductal = 431, Adverse_Endothelial = 81, Adverse_Fibroblast = 246, Adverse_Macrophage = 100, Adverse_Plasma = 33, Favorable_Alpha = 195, Favorable_Beta = 76, Favorable_Dendritic = 22, Favorable_Ductal = 54, Favorable_Endothelial = 13, Favorable_Fibroblast = 561, Favorable_Plasma = 37, Favorable_Schwann = 20, Other = 17981 
     ## Diagnostic: assay Spatial
 
 ### Step 4: Heatmap of cell-type-specific markers

@@ -94,9 +94,9 @@ if (!has_data) {
 }
 ```
 
-    ## [Load GSE111672] Runtime: 0.07 s | Memory: 2.9 Mb
+    ## [Load GSE111672] Runtime: 0.41 s | Memory: 24.1 Mb
 
-    ## Genes: 1500 | Cells: 400 | Samples: 1
+    ## Genes: 1500 | Cells: 6122 | Samples: 3
 
 ### Score cells
 
@@ -218,21 +218,23 @@ if (!is.na(group_col)) {
 }
 ```
 
-    ## Using Seurat FindMarkers: Most Adverse n=20, Most Favorable n=20
+    ## Using Seurat FindMarkers: Most Adverse n=307, Most Favorable n=307
 
-    ##          p_val avg_log2FC pct_in_group pct_rest     gene        p_adj
-    ## 1 3.816439e-66  14.081340         0.75    0.000     CPA2 5.724658e-63
-    ## 2 3.816439e-66  13.760232         0.75    0.000     SYCN 5.724658e-63
-    ## 3 3.580632e-62  12.804106         0.75    0.003      CEL 5.370947e-59
-    ## 4 3.580632e-62  14.519706         0.75    0.003   CELA3B 5.370947e-59
-    ## 5 3.947675e-62  10.978666         0.75    0.003 PNLIPRP1 5.921512e-59
-    ## 6 4.798002e-62   9.754496         0.75    0.003    CUZD1 7.197003e-59
+    ## Subsampled Other from 5508 to 5000 cells (memory limit)
+
+    ##          p_val avg_log2FC pct_in_group pct_rest    gene        p_adj
+    ## 1 1.696027e-40  -1.833010        0.283    0.711  TM4SF1 2.544040e-37
+    ## 2 5.184862e-38  -2.338469        0.156    0.581 TACSTD2 7.777293e-35
+    ## 3 6.879721e-30  -1.758484        0.208    0.578  GPRC5A 1.031958e-26
+    ## 4 4.257881e-29  -1.356076        0.329    0.700    SAT1 6.386822e-26
+    ## 5 2.345627e-28  -1.731971        0.352    0.685   CLDN4 3.518441e-25
+    ## 6 2.953036e-28  -2.190502        0.088    0.431   PLAUR 4.429555e-25
 
 ``` r
 report_timing("Marker analysis GSE111672", t0)
 ```
 
-    ## [Marker analysis GSE111672] Runtime: 0.67 s | Memory: -
+    ## [Marker analysis GSE111672] Runtime: 1.04 s | Memory: -
 
 ### Marker heatmap
 
@@ -338,7 +340,7 @@ if (requireNamespace("pheatmap", quietly = TRUE)) {
 report_timing("Heatmap GSE111672", t0)
 ```
 
-    ## [Heatmap GSE111672] Runtime: 0.96 s | Memory: -
+    ## [Heatmap GSE111672] Runtime: 2.15 s | Memory: -
 
 ### Proportion by sample and cell type
 
@@ -389,7 +391,7 @@ if (nrow(meta_plot) > 0) {
 report_timing("Proportion plot GSE111672", t0)
 ```
 
-    ## [Proportion plot GSE111672] Runtime: 1.64 s | Memory: -
+    ## [Proportion plot GSE111672] Runtime: 3.16 s | Memory: -
 
 ------------------------------------------------------------------------
 
@@ -459,7 +461,7 @@ if (!is.null(seurat2)) {
 
     ## Added 1 score column(s) to Seurat metadata
 
-    ## [Score CRA001160] Runtime: 0.11 s | Memory: 3.9 Mb
+    ## [Score CRA001160] Runtime: 0.71 s | Memory: 349.2 Mb
 
 ### Score by cell type (CRA001160)
 
@@ -498,7 +500,7 @@ report_timing("Cell type plot CRA001160", t0)
 
 ![](gse111672-single-cell_files/figure-html/score-by-celltype-cra001160-1.png)
 
-    ## [Cell type plot CRA001160] Runtime: 0.18 s | Memory: -
+    ## [Cell type plot CRA001160] Runtime: 0.40 s | Memory: -
 
 ### Prognostic markers (CRA001160)
 
@@ -530,9 +532,11 @@ report_timing("Marker analysis CRA001160", t0)
 }
 ```
 
-    ## Using Seurat FindMarkers: Most Adverse n=20, Most Favorable n=20
+    ## Using Seurat FindMarkers: Most Adverse n=2873, Most Favorable n=2873
 
-    ## [Marker analysis CRA001160] Runtime: 0.68 s | Memory: -
+    ## Subsampled Other from 51697 to 5000 cells (memory limit)
+
+    ## [Marker analysis CRA001160] Runtime: 2.35 s | Memory: -
 
 ### Marker heatmap (CRA001160)
 
@@ -635,7 +639,7 @@ report_timing("Heatmap CRA001160", t0)
 
 ![](gse111672-single-cell_files/figure-html/heatmap-markers-cra001160-1.png)
 
-    ## [Heatmap CRA001160] Runtime: 0.09 s | Memory: -
+    ## [Heatmap CRA001160] Runtime: 6.84 s | Memory: -
 
 ### Proportion by sample and cell type (CRA001160)
 
@@ -685,7 +689,7 @@ report_timing("Proportion plot CRA001160", t0)
 
 ![](gse111672-single-cell_files/figure-html/proportion-by-sample-celltype-cra001160-1.png)
 
-    ## [Proportion plot CRA001160] Runtime: 0.21 s | Memory: -
+    ## [Proportion plot CRA001160] Runtime: 0.23 s | Memory: -
 
 ------------------------------------------------------------------------
 
