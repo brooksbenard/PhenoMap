@@ -1,11 +1,11 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://brooksbenard.github.io/PhenoMapR/404.html</loc></url>
 <url><loc>https://brooksbenard.github.io/PhenoMapR/LICENSE-text.html</loc></url>
+<url><loc>https://brooksbenard.github.io/PhenoMapR/articles/bulk-survival.html</loc></url>
+<url><loc>https://brooksbenard.github.io/PhenoMapR/articles/custom-reference.html</loc></url>
 <url><loc>https://brooksbenard.github.io/PhenoMapR/articles/get-started.html</loc></url>
-<url><loc>https://brooksbenard.github.io/PhenoMapR/articles/gse111672-single-cell.html</loc></url>
-<url><loc>https://brooksbenard.github.io/PhenoMapR/articles/gse205154-bulk-survival.html</loc></url>
-<url><loc>https://brooksbenard.github.io/PhenoMapR/articles/gse205154-custom-reference.html</loc></url>
 <url><loc>https://brooksbenard.github.io/PhenoMapR/articles/index.html</loc></url>
+<url><loc>https://brooksbenard.github.io/PhenoMapR/articles/single-cell.html</loc></url>
 <url><loc>https://brooksbenard.github.io/PhenoMapR/articles/spatial-transcriptomics.html</loc></url>
 <url><loc>https://brooksbenard.github.io/PhenoMapR/authors.html</loc></url>
 <url><loc>https://brooksbenard.github.io/PhenoMapR/index.html</loc></url>

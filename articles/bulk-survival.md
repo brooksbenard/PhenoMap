@@ -34,34 +34,44 @@ with PhenoMapR and link scores to outcome.
 knitr::opts_chunk$set(fig.width = 6, fig.height = 6, fig.align = "center")
 suppressPackageStartupMessages(library(PhenoMapR))
 
-# Vignette data: local paths, then Google Drive (https://drive.google.com/drive/folders/1rKGZBX7sa_Iq8AJb1wcxiRc3oD6v6B5n)
+# Vignette data: load from Google Drive only
+if (!requireNamespace("googledrive", quietly = TRUE)) {
+  stop("The 'googledrive' package is required. Install with: install.packages('googledrive')")
+}
 vignette_dir <- if (dir.exists("vignettes")) "vignettes" else if (dir.exists("Vignettes")) "Vignettes" else "."
-info_path <- file.path(vignette_dir, "GSE205154.info.txt")
+if (!dir.exists(vignette_dir)) dir.create(vignette_dir, recursive = TRUE, showWarnings = FALSE)
+
+googledrive::drive_deauth()
 matrix_path <- file.path(vignette_dir, "GSE205154.GPL20301.matrix.txt")
-if (!file.exists(info_path)) {
-  info_path <- "GSE205154.info.txt"
-  matrix_path <- "GSE205154.GPL20301.matrix.txt"
-}
-if (!file.exists(matrix_path) && !nzchar(Sys.getenv("CI", "")) && requireNamespace("googledrive", quietly = TRUE)) {
-  googledrive::drive_deauth()
-  googledrive::drive_download(googledrive::as_id("1Vk4KCQWF9ikpAuMsjFzVDCoy1TzDl2rN"), matrix_path, overwrite = TRUE)
-}
-if (!file.exists(info_path) && !nzchar(Sys.getenv("CI", "")) && requireNamespace("googledrive", quietly = TRUE)) {
-  googledrive::drive_deauth()
-  googledrive::drive_download(googledrive::as_id("1omAA2kfVn-nyyZfcc4vBhRFogC6cuoNQ"), info_path, overwrite = TRUE)
-}
-if (!file.exists(matrix_path)) {
-  u <- Sys.getenv("PHENOMAPR_GSE205154_MATRIX_URL", "")
-  if (nzchar(u)) tryCatch({ download.file(u, matrix_path, mode = "wb", quiet = TRUE) }, error = function(e) NULL)
-}
-if (!file.exists(info_path)) {
-  u <- Sys.getenv("PHENOMAPR_GSE205154_INFO_URL", "")
-  if (nzchar(u)) tryCatch({ download.file(u, info_path, mode = "wb", quiet = TRUE) }, error = function(e) NULL)
-}
+info_path <- file.path(vignette_dir, "GSE205154.info.txt")
+googledrive::drive_download(googledrive::as_id("1Vk4KCQWF9ikpAuMsjFzVDCoy1TzDl2rN"), matrix_path, overwrite = TRUE)
+```
+
+    ## File downloaded:
+
+    ## • GSE205154.GPL20301.matrix.txt <id: 1Vk4KCQWF9ikpAuMsjFzVDCoy1TzDl2rN>
+
+    ## Saved locally as:
+
+    ## • ./GSE205154.GPL20301.matrix.txt
+
+``` r
+googledrive::drive_download(googledrive::as_id("1omAA2kfVn-nyyZfcc4vBhRFogC6cuoNQ"), info_path, overwrite = TRUE)
+```
+
+    ## File downloaded:
+
+    ## • GSE205154.info.txt <id: 1omAA2kfVn-nyyZfcc4vBhRFogC6cuoNQ>
+
+    ## Saved locally as:
+
+    ## • ./GSE205154.info.txt
+
+``` r
 has_data <- file.exists(info_path) && file.exists(matrix_path)
 knitr::opts_chunk$set(eval = has_data)
 if (!has_data) {
-  message("GSE205154 data files not found. See Vignettes/README.md for download instructions.")
+  message("Could not download GSE205154 data files from Google Drive.")
 } else {
   # Clinical annotations: Array = sample ID, Tumor_Type = Primary/Met, OS_Time, OS_Status, Specimen_Site (when available)
   info <- read.delim(info_path, stringsAsFactors = FALSE, check.names = FALSE)
@@ -173,7 +183,7 @@ ggplot(score_long, aes(x = score_z, fill = type)) +
   theme_minimal()
 ```
 
-![](gse205154-bulk-survival_files/figure-html/score-histogram-1.png)
+![](bulk-survival_files/figure-html/score-histogram-1.png)
 
 ## 3. Primary vs Metastatic outcomes
 
@@ -203,7 +213,7 @@ ggsurvplot(fit_primary, data = dat, palette = pal_tumor, risk.table = FALSE,
            pval = label_primary, pval.coord = c(max_time_primary * 0.5, 0.95), pval.size = 3.5)
 ```
 
-![](gse205154-bulk-survival_files/figure-html/primary-vs-met-1.png)
+![](bulk-survival_files/figure-html/primary-vs-met-1.png)
 
 It seems like patients with metastatic disease trend towards worse
 outcomes but it’s not statistically significant.
@@ -237,7 +247,7 @@ ggsurvplot(fit_primary, data = dat_primary, palette = pal_km, risk.table = FALSE
            pval = label_primary, pval.coord = c(max_time_primary * 0.5, 0.95), pval.size = 3.5)
 ```
 
-![](gse205154-bulk-survival_files/figure-html/km-primary-1.png)
+![](bulk-survival_files/figure-html/km-primary-1.png)
 
 ## 5. Metastatic samples: PhenoMapR stratifies outcome
 
@@ -267,7 +277,7 @@ ggsurvplot(fit_met, data = dat_met, palette = pal_km, risk.table = FALSE,
            pval = label_met, pval.coord = c(max_time_met * 0.5, 0.95), pval.size = 3.5)
 ```
 
-![](gse205154-bulk-survival_files/figure-html/km-metastatic-1.png)
+![](bulk-survival_files/figure-html/km-metastatic-1.png)
 
 ## 6. Additional example: GSE253260 bulk expression
 
@@ -1169,7 +1179,7 @@ if (nrow(dat_nonmet) > 0) {
 }
 ```
 
-![](gse205154-bulk-survival_files/figure-html/gse253260-nonmet-plots-1.png)
+![](bulk-survival_files/figure-html/gse253260-nonmet-plots-1.png)
 
 ``` r
 dat_nonmet_os <- subset(dat_nonmet, !is.na(OS_Days) & !is.na(OS_Censor))

@@ -34,10 +34,10 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-vignettes" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Vignettes</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-vignettes">
-<li><a class="dropdown-item" href="../articles/gse111672-single-cell.html">Single-cell example (GSE111672)</a></li>
+<li><a class="dropdown-item" href="../articles/single-cell.html">Single-cell example</a></li>
     <li><a class="dropdown-item" href="../articles/spatial-transcriptomics.html">Spatial transcriptomics</a></li>
-    <li><a class="dropdown-item" href="../articles/gse205154-bulk-survival.html">Bulk survival analysis (GSE205154)</a></li>
-    <li><a class="dropdown-item" href="../articles/gse205154-custom-reference.html">Custom reference (GSE205154)</a></li>
+    <li><a class="dropdown-item" href="../articles/bulk-survival.html">Bulk survival analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/custom-reference.html">Custom reference</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">R functions</a></li>
@@ -361,12 +361,12 @@ site</a> and in the repo under <code>vignettes/</code> <a href="https://github.c
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td><strong><a href="gse111672-single-cell.html">Score Single-cell
+<td><strong><a href="single-cell.html">Score Single-cell
 data</a></strong></td>
-<td>Score PAAD single cells with PRECOG <strong>Pancreatic</strong>
-using the included <code>PAAD_GSE111672_seurat.rds</code>; cell type
-score distributions and prognostic group marker analysis. Data: <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE111672" class="external-link">GEO
-GSE111672</a>.</td>
+<td>Score PAAD single cells (CRA001160) with <strong>TCGA</strong> and
+<strong>PRECOG</strong> Pancreatic references; scatterplot and boxplots
+by cell type; prognostic markers and proportion by sample. Data:
+expression H5 + CellMetainfo from Drive.</td>
 </tr>
 <tr class="even">
 <td><strong><a href="spatial-transcriptomics.html">Score Spatial
@@ -376,17 +376,17 @@ transcriptomics data</a></strong></td>
 spatial maps of score and group on the tissue image.</td>
 </tr>
 <tr class="odd">
-<td><strong><a href="gse205154-bulk-survival.html">Score bulk expression
+<td><strong><a href="bulk-survival.html">Score bulk expression
 samples</a></strong></td>
 <td>Score 289 primary/metastatic bulk samples with PhenoMapR PRECOG
 references; stratify by primary vs metastatic;
-<strong>Kaplan–Meier</strong> survival by prognostic score. Data: <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE205154" class="external-link">GEO
-GSE205154</a>.</td>
+<strong>Kaplan–Meier</strong> survival by prognostic score. Data from
+Drive.</td>
 </tr>
 <tr class="even">
-<td><strong><a href="gse205154-custom-reference.html">Generate and use a
-custom reference signature</a></strong></td>
-<td>Build a custom gene z-score reference from GSE205154 expression and
+<td><strong><a href="custom-reference.html">Generate and use a custom
+reference signature</a></strong></td>
+<td>Build a custom gene z-score reference from bulk expression and
 survival using <code><a href="../reference/derive_reference_from_bulk.html">derive_reference_from_bulk()</a></code>, then score
 samples with that reference.</td>
 </tr>

@@ -34,10 +34,10 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-vignettes" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Vignettes</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-vignettes">
-<li><a class="dropdown-item" href="../articles/gse111672-single-cell.html">Single-cell example (GSE111672)</a></li>
+<li><a class="dropdown-item" href="../articles/single-cell.html">Single-cell example</a></li>
     <li><a class="dropdown-item" href="../articles/spatial-transcriptomics.html">Spatial transcriptomics</a></li>
-    <li><a class="dropdown-item" href="../articles/gse205154-bulk-survival.html">Bulk survival analysis (GSE205154)</a></li>
-    <li><a class="dropdown-item" href="../articles/gse205154-custom-reference.html">Custom reference (GSE205154)</a></li>
+    <li><a class="dropdown-item" href="../articles/bulk-survival.html">Bulk survival analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/custom-reference.html">Custom reference</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">R functions</a></li>
@@ -70,8 +70,8 @@
       <img src="../logo.png" class="logo" alt=""><h1>Scoring bulk gene expression samples with PhenoMapR</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/brooksbenard/PhenoMapR/blob/main/vignettes/gse205154-bulk-survival.Rmd" class="external-link"><code>vignettes/gse205154-bulk-survival.Rmd</code></a></small>
-      <div class="d-none name"><code>gse205154-bulk-survival.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/brooksbenard/PhenoMapR/blob/main/vignettes/bulk-survival.Rmd" class="external-link"><code>vignettes/bulk-survival.Rmd</code></a></small>
+      <div class="d-none name"><code>bulk-survival.Rmd</code></div>
     </div>
 
     
@@ -111,40 +111,38 @@ with PhenoMapR and link scores to outcome.</p>
 <code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/knitr/man/opts_chunk.html" class="external-link">opts_chunk</a></span><span class="op">$</span><span class="fu">set</span><span class="op">(</span>fig.width <span class="op">=</span> <span class="fl">6</span>, fig.height <span class="op">=</span> <span class="fl">6</span>, fig.align <span class="op">=</span> <span class="st">"center"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressPackageStartupMessages</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://brooksbenard.github.io/PhenoMapR">PhenoMapR</a></span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Vignette data: local paths, then Google Drive (https://drive.google.com/drive/folders/1rKGZBX7sa_Iq8AJb1wcxiRc3oD6v6B5n)</span></span>
+<span><span class="co"># Vignette data: load from Google Drive only</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"googledrive"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"The 'googledrive' package is required. Install with: install.packages('googledrive')"</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
 <span><span class="va">vignette_dir</span> <span class="op">&lt;-</span> <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.exists</a></span><span class="op">(</span><span class="st">"vignettes"</span><span class="op">)</span><span class="op">)</span> <span class="st">"vignettes"</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.exists</a></span><span class="op">(</span><span class="st">"Vignettes"</span><span class="op">)</span><span class="op">)</span> <span class="st">"Vignettes"</span> <span class="kw">else</span> <span class="st">"."</span></span>
-<span><span class="va">info_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">vignette_dir</span>, <span class="st">"GSE205154.info.txt"</span><span class="op">)</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.exists</a></span><span class="op">(</span><span class="va">vignette_dir</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">vignette_dir</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span>, showWarnings <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">googledrive</span><span class="fu">::</span><span class="fu"><a href="https://googledrive.tidyverse.org/reference/drive_deauth.html" class="external-link">drive_deauth</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">matrix_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">vignette_dir</span>, <span class="st">"GSE205154.GPL20301.matrix.txt"</span><span class="op">)</span></span>
-<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.exists</a></span><span class="op">(</span><span class="va">info_path</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">info_path</span> <span class="op">&lt;-</span> <span class="st">"GSE205154.info.txt"</span></span>
-<span>  <span class="va">matrix_path</span> <span class="op">&lt;-</span> <span class="st">"GSE205154.GPL20301.matrix.txt"</span></span>
-<span><span class="op">}</span></span>
-<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.exists</a></span><span class="op">(</span><span class="va">matrix_path</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/nchar.html" class="external-link">nzchar</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"CI"</span>, <span class="st">""</span><span class="op">)</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"googledrive"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu">googledrive</span><span class="fu">::</span><span class="fu"><a href="https://googledrive.tidyverse.org/reference/drive_deauth.html" class="external-link">drive_deauth</a></span><span class="op">(</span><span class="op">)</span></span>
-<span>  <span class="fu">googledrive</span><span class="fu">::</span><span class="fu"><a href="https://googledrive.tidyverse.org/reference/drive_download.html" class="external-link">drive_download</a></span><span class="op">(</span><span class="fu">googledrive</span><span class="fu">::</span><span class="fu"><a href="https://googledrive.tidyverse.org/reference/drive_id.html" class="external-link">as_id</a></span><span class="op">(</span><span class="st">"1Vk4KCQWF9ikpAuMsjFzVDCoy1TzDl2rN"</span><span class="op">)</span>, <span class="va">matrix_path</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.exists</a></span><span class="op">(</span><span class="va">info_path</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/nchar.html" class="external-link">nzchar</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"CI"</span>, <span class="st">""</span><span class="op">)</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"googledrive"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu">googledrive</span><span class="fu">::</span><span class="fu"><a href="https://googledrive.tidyverse.org/reference/drive_deauth.html" class="external-link">drive_deauth</a></span><span class="op">(</span><span class="op">)</span></span>
-<span>  <span class="fu">googledrive</span><span class="fu">::</span><span class="fu"><a href="https://googledrive.tidyverse.org/reference/drive_download.html" class="external-link">drive_download</a></span><span class="op">(</span><span class="fu">googledrive</span><span class="fu">::</span><span class="fu"><a href="https://googledrive.tidyverse.org/reference/drive_id.html" class="external-link">as_id</a></span><span class="op">(</span><span class="st">"1omAA2kfVn-nyyZfcc4vBhRFogC6cuoNQ"</span><span class="op">)</span>, <span class="va">info_path</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.exists</a></span><span class="op">(</span><span class="va">matrix_path</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">u</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"PHENOMAPR_GSE205154_MATRIX_URL"</span>, <span class="st">""</span><span class="op">)</span></span>
-<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nchar.html" class="external-link">nzchar</a></span><span class="op">(</span><span class="va">u</span><span class="op">)</span><span class="op">)</span> <span class="kw"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch</a></span><span class="op">(</span><span class="op">{</span> <span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span><span class="va">u</span>, <span class="va">matrix_path</span>, mode <span class="op">=</span> <span class="st">"wb"</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">}</span>, error <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">e</span><span class="op">)</span> <span class="cn">NULL</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.exists</a></span><span class="op">(</span><span class="va">info_path</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">u</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"PHENOMAPR_GSE205154_INFO_URL"</span>, <span class="st">""</span><span class="op">)</span></span>
-<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nchar.html" class="external-link">nzchar</a></span><span class="op">(</span><span class="va">u</span><span class="op">)</span><span class="op">)</span> <span class="kw"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch</a></span><span class="op">(</span><span class="op">{</span> <span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span><span class="va">u</span>, <span class="va">info_path</span>, mode <span class="op">=</span> <span class="st">"wb"</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">}</span>, error <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">e</span><span class="op">)</span> <span class="cn">NULL</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span><span class="va">has_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.exists</a></span><span class="op">(</span><span class="va">info_path</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.exists</a></span><span class="op">(</span><span class="va">matrix_path</span><span class="op">)</span></span>
+<span><span class="va">info_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">vignette_dir</span>, <span class="st">"GSE205154.info.txt"</span><span class="op">)</span></span>
+<span><span class="fu">googledrive</span><span class="fu">::</span><span class="fu"><a href="https://googledrive.tidyverse.org/reference/drive_download.html" class="external-link">drive_download</a></span><span class="op">(</span><span class="fu">googledrive</span><span class="fu">::</span><span class="fu"><a href="https://googledrive.tidyverse.org/reference/drive_id.html" class="external-link">as_id</a></span><span class="op">(</span><span class="st">"1Vk4KCQWF9ikpAuMsjFzVDCoy1TzDl2rN"</span><span class="op">)</span>, <span class="va">matrix_path</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## File downloaded:</span></span></code></pre>
+<pre><code><span><span class="co">## • <span style="color: #00BBBB;">GSE205154.GPL20301.matrix.txt</span> <span style="color: #555555;">&lt;id: 1Vk4KCQWF9ikpAuMsjFzVDCoy1TzDl2rN&gt;</span></span></span></code></pre>
+<pre><code><span><span class="co">## Saved locally as:</span></span></code></pre>
+<pre><code><span><span class="co">## • <span style="color: #0000BB;">./GSE205154.GPL20301.matrix.txt</span></span></span></code></pre>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">googledrive</span><span class="fu">::</span><span class="fu"><a href="https://googledrive.tidyverse.org/reference/drive_download.html" class="external-link">drive_download</a></span><span class="op">(</span><span class="fu">googledrive</span><span class="fu">::</span><span class="fu"><a href="https://googledrive.tidyverse.org/reference/drive_id.html" class="external-link">as_id</a></span><span class="op">(</span><span class="st">"1omAA2kfVn-nyyZfcc4vBhRFogC6cuoNQ"</span><span class="op">)</span>, <span class="va">info_path</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## File downloaded:</span></span></code></pre>
+<pre><code><span><span class="co">## • <span style="color: #00BBBB;">GSE205154.info.txt</span> <span style="color: #555555;">&lt;id: 1omAA2kfVn-nyyZfcc4vBhRFogC6cuoNQ&gt;</span></span></span></code></pre>
+<pre><code><span><span class="co">## Saved locally as:</span></span></code></pre>
+<pre><code><span><span class="co">## • <span style="color: #0000BB;">./GSE205154.info.txt</span></span></span></code></pre>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">has_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.exists</a></span><span class="op">(</span><span class="va">info_path</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.exists</a></span><span class="op">(</span><span class="va">matrix_path</span><span class="op">)</span></span>
 <span><span class="fu">knitr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/knitr/man/opts_chunk.html" class="external-link">opts_chunk</a></span><span class="op">$</span><span class="fu">set</span><span class="op">(</span>eval <span class="op">=</span> <span class="va">has_data</span><span class="op">)</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="va">has_data</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"GSE205154 data files not found. See Vignettes/README.md for download instructions."</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"Could not download GSE205154 data files from Google Drive."</span><span class="op">)</span></span>
 <span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
 <span>  <span class="co"># Clinical annotations: Array = sample ID, Tumor_Type = Primary/Met, OS_Time, OS_Status, Specimen_Site (when available)</span></span>
 <span>  <span class="va">info</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span><span class="va">info_path</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span>, check.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">info</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">info</span><span class="op">)</span> <span class="op">==</span> <span class="st">"Array"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"sample_id"</span></span>
 <span>  <span class="va">info</span><span class="op">$</span><span class="va">tumor_type</span> <span class="op">&lt;-</span> <span class="va">info</span><span class="op">$</span><span class="va">Tumor_Type</span></span>
-<span>  <span class="va">site_col</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/setops.html" class="external-link">intersect</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Specimen_Site"</span>, <span class="st">"Specimen.Site"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">info</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
+<span>  <span class="va">site_col</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">intersect</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Specimen_Site"</span>, <span class="st">"Specimen.Site"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">info</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
 <span>  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">site_col</span><span class="op">)</span><span class="op">)</span> <span class="va">info</span><span class="op">$</span><span class="va">specimen_site</span> <span class="op">&lt;-</span> <span class="va">info</span><span class="op">[[</span><span class="va">site_col</span><span class="op">]</span><span class="op">]</span></span>
 <span>  <span class="va">info</span><span class="op">$</span><span class="va">survival_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">info</span><span class="op">$</span><span class="va">OS_Time</span><span class="op">)</span> <span class="op">/</span> <span class="fl">365.25</span>  <span class="co"># convert to years</span></span>
 <span>  <span class="va">info</span><span class="op">$</span><span class="va">survival_event</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="va">info</span><span class="op">$</span><span class="va">OS_Status</span><span class="op">)</span></span>
@@ -162,7 +160,7 @@ with PhenoMapR and link scores to outcome.</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/mode.html" class="external-link">mode</a></span><span class="op">(</span><span class="va">bulk_mat</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"numeric"</span></span>
 <span></span>
 <span>  <span class="co"># Align to samples in clinical info</span></span>
-<span>  <span class="va">keep</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/setops.html" class="external-link">intersect</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">bulk_mat</span><span class="op">)</span>, <span class="va">info</span><span class="op">$</span><span class="va">sample_id</span><span class="op">)</span></span>
+<span>  <span class="va">keep</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">intersect</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">bulk_mat</span><span class="op">)</span>, <span class="va">info</span><span class="op">$</span><span class="va">sample_id</span><span class="op">)</span></span>
 <span>  <span class="va">bulk_mat</span> <span class="op">&lt;-</span> <span class="va">bulk_mat</span><span class="op">[</span>, <span class="va">keep</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span></span>
 <span>  <span class="va">pheno</span> <span class="op">&lt;-</span> <span class="va">info</span><span class="op">[</span><span class="va">info</span><span class="op">$</span><span class="va">sample_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">keep</span>, <span class="op">]</span></span>
 <span>  <span class="va">pheno</span> <span class="op">&lt;-</span> <span class="va">pheno</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/match.html" class="external-link">match</a></span><span class="op">(</span><span class="va">keep</span>, <span class="va">pheno</span><span class="op">$</span><span class="va">sample_id</span><span class="op">)</span>, <span class="op">]</span></span>
@@ -183,7 +181,7 @@ signatures for Adult PRECOG <strong>Pancreatic</strong> (primary) and
 score to the samples, we should be able to identify patients expressing
 more adversely prognostic signatures as well as more favorably
 prognostic signatures and this should stratify outcomes.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># To assign a PhenoMap score to each sample, pass the bulk gene expression matrix</span></span>
 <span><span class="co"># to the expression argument, select the reference database to score against (can</span></span>
 <span><span class="co"># be one of: precog, tcga, pediatric_precog, or ici_precog, and specify the cancer</span></span>
@@ -200,7 +198,7 @@ prognostic signatures and this should stratify outcomes.</p>
 <pre><code><span><span class="co">## Detected input type: matrix</span></span></code></pre>
 <pre><code><span><span class="co">## 7376 genes used for scoring against PancreaticCalculating scores...</span></span>
 <span><span class="co">## Completed scoring for Pancreatic</span></span></code></pre>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Score all samples using the Metastatic PAAD signature</span></span>
 <span><span class="va">scores_met</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PhenoMap.html">PhenoMap</a></span><span class="op">(</span></span>
 <span>  expression <span class="op">=</span> <span class="va">bulk_mat</span>,</span>
@@ -211,7 +209,7 @@ prognostic signatures and this should stratify outcomes.</p>
 <pre><code><span><span class="co">## Detected input type: matrix</span></span></code></pre>
 <pre><code><span><span class="co">## 2997 genes used for scoring against Pancreatic_MetastasisCalculating scores...</span></span>
 <span><span class="co">## Completed scoring for Pancreatic_Metastasis</span></span></code></pre>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># make a combined dataframe of sample clinical annotations and PhenoMap scores </span></span>
 <span><span class="va">col_pan</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"Pancreatic$"</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">scores_primary</span><span class="op">)</span>, value <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
 <span><span class="va">col_met</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"Pancreatic_Metastasis"</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">scores_met</span><span class="op">)</span>, value <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
@@ -222,7 +220,7 @@ prognostic signatures and this should stratify outcomes.</p>
 <span>  stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">pheno</span>, <span class="va">scores_df</span>, by <span class="op">=</span> <span class="st">"sample_id"</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Summary histogram: Primary and Metastatic PhenoMapR scores (z-scaled)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressPackageStartupMessages</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">score_long</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
@@ -235,7 +233,7 @@ prognostic signatures and this should stratify outcomes.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Pancreatic (primary)"</span> <span class="op">=</span> <span class="st">"tan"</span>, <span class="st">"Pancreatic_Metastasis"</span> <span class="op">=</span> <span class="st">"darkred"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"PhenoMapR score (z-scaled)"</span>, y <span class="op">=</span> <span class="st">"Count"</span>, fill <span class="op">=</span> <span class="st">"Signature"</span>, title <span class="op">=</span> <span class="st">"PhenoMapR score distribution"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="gse205154-bulk-survival_files/figure-html/score-histogram-1.png" class="r-plt" alt="" width="768" style="display: block; margin: auto;"></p>
+<p><img src="bulk-survival_files/figure-html/score-histogram-1.png" class="r-plt" alt="" width="768" style="display: block; margin: auto;"></p>
 <!-- ## 3. Gene expression heatmap (commented out)
 Clustered heatmap of input gene expression using variable genes (top 2000 by variance). Rows and columns are clustered. Column annotations: metastatic status (Primary/Met), site of metastasis when available (Specimen_Site), and PhenoMapR score (z-scaled). Top 5 genes per cluster are labeled with anno_mark.
 
@@ -248,7 +246,7 @@ Clustered heatmap of input gene expression using variable genes (top 2000 by var
 <p>Before seeing if PhenoMapR scores stratify outcomes, let’s see if the
 primary and metastatic patients in the study show differences in
 outcomes.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressPackageStartupMessages</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/therneau/survival" class="external-link">survival</a></span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressPackageStartupMessages</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rpkgs.datanovia.com/survminer/index.html" class="external-link">survminer</a></span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unnamed vector: order matches strata (Met first, then Primary). Named palettes trigger scale warnings.</span></span>
@@ -268,7 +266,7 @@ outcomes.</p>
 <span>           xlab <span class="op">=</span> <span class="st">"Time (years)"</span>, ylab <span class="op">=</span> <span class="st">"Survival probability"</span>, legend.title <span class="op">=</span> <span class="st">"Status"</span>,</span>
 <span>           legend.labs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Metastatic"</span>, <span class="st">"Primary"</span><span class="op">)</span>, legend <span class="op">=</span> <span class="st">"right"</span>,</span>
 <span>           pval <span class="op">=</span> <span class="va">label_primary</span>, pval.coord <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">max_time_primary</span> <span class="op">*</span> <span class="fl">0.5</span>, <span class="fl">0.95</span><span class="op">)</span>, pval.size <span class="op">=</span> <span class="fl">3.5</span><span class="op">)</span></span></code></pre></div>
-<p><img src="gse205154-bulk-survival_files/figure-html/primary-vs-met-1.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;"></p>
+<p><img src="bulk-survival_files/figure-html/primary-vs-met-1.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;"></p>
 <p>It seems like patients with metastatic disease trend towards worse
 outcomes but it’s not statistically significant.</p>
 </div>
@@ -278,7 +276,7 @@ outcomes but it’s not statistically significant.</p>
 <p>Stratify primary samples by PhenoMapR score (high vs low median
 split) and show that the <strong>Pancreatic</strong> score stratifies
 survival.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Unnamed vector: order matches strata (High first, then Low). Named palettes can trigger scale warnings.</span></span>
 <span><span class="va">pal_km</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#B2182B"</span>, <span class="st">"#2166AC"</span><span class="op">)</span>  <span class="co"># High (adverse), Low (favorable)</span></span>
 <span><span class="va">dat_primary</span> <span class="op">&lt;-</span> <span class="va">dat</span><span class="op">[</span><span class="va">dat</span><span class="op">$</span><span class="va">tumor_type</span> <span class="op">==</span> <span class="st">"Primary"</span>, <span class="op">]</span></span>
@@ -300,7 +298,7 @@ survival.</p>
 <span>           xlab <span class="op">=</span> <span class="st">"Time (years)"</span>, ylab <span class="op">=</span> <span class="st">"Survival probability"</span>, legend.title <span class="op">=</span> <span class="st">"PhenoMapR Score"</span>,</span>
 <span>           legend.labs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"High"</span>, <span class="st">"Low"</span><span class="op">)</span>, legend <span class="op">=</span> <span class="st">"right"</span>,</span>
 <span>           pval <span class="op">=</span> <span class="va">label_primary</span>, pval.coord <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">max_time_primary</span> <span class="op">*</span> <span class="fl">0.5</span>, <span class="fl">0.95</span><span class="op">)</span>, pval.size <span class="op">=</span> <span class="fl">3.5</span><span class="op">)</span></span></code></pre></div>
-<p><img src="gse205154-bulk-survival_files/figure-html/km-primary-1.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;"></p>
+<p><img src="bulk-survival_files/figure-html/km-primary-1.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="metastatic-samples-phenomapr-stratifies-outcome">5. Metastatic samples: PhenoMapR stratifies outcome<a class="anchor" aria-label="anchor" href="#metastatic-samples-phenomapr-stratifies-outcome"></a>
@@ -308,7 +306,7 @@ survival.</p>
 <p>Stratify metastatic samples by PhenoMapR score (high vs low median
 split) and show that the <strong>Pancreatic_Metastasis</strong> score
 stratifies survival in this subset.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dat_met</span> <span class="op">&lt;-</span> <span class="va">dat</span><span class="op">[</span><span class="va">dat</span><span class="op">$</span><span class="va">tumor_type</span> <span class="op">==</span> <span class="st">"Met"</span>, <span class="op">]</span></span>
 <span><span class="va">dat_met</span><span class="op">$</span><span class="va">score_grp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span></span>
 <span>  <span class="va">dat_met</span><span class="op">$</span><span class="va">score_Pancreatic_Metastasis</span> <span class="op">&gt;=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">dat_met</span><span class="op">$</span><span class="va">score_Pancreatic_Metastasis</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
@@ -328,7 +326,7 @@ stratifies survival in this subset.</p>
 <span>           xlab <span class="op">=</span> <span class="st">"Time (years)"</span>, ylab <span class="op">=</span> <span class="st">"Survival probability"</span>, legend.title <span class="op">=</span> <span class="st">"PhenoMapR Score"</span>,</span>
 <span>           legend.labs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"High"</span>, <span class="st">"Low"</span><span class="op">)</span>, legend <span class="op">=</span> <span class="st">"right"</span>,</span>
 <span>           pval <span class="op">=</span> <span class="va">label_met</span>, pval.coord <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">max_time_met</span> <span class="op">*</span> <span class="fl">0.5</span>, <span class="fl">0.95</span><span class="op">)</span>, pval.size <span class="op">=</span> <span class="fl">3.5</span><span class="op">)</span></span></code></pre></div>
-<p><img src="gse205154-bulk-survival_files/figure-html/km-metastatic-1.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;"></p>
+<p><img src="bulk-survival_files/figure-html/km-metastatic-1.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="additional-example-gse253260-bulk-expression">6. Additional example: GSE253260 bulk expression<a class="anchor" aria-label="anchor" href="#additional-example-gse253260-bulk-expression"></a>
@@ -337,7 +335,7 @@ stratifies survival in this subset.</p>
 available without matched outcomes. Here we show how to start from GEO,
 preprocess expression and clinical data, and then score and stratify
 patients using PhenoMapR.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">study</span> <span class="op">&lt;-</span> <span class="st">"GSE253260"</span></span>
 <span><span class="va">expr_tpm</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
 <span><span class="va">gset</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
@@ -402,7 +400,7 @@ patients using PhenoMapR.</p>
 <pre><code><span><span class="co">## Saved locally as:</span></span></code></pre>
 <pre><code><span><span class="co">## • <span style="color: #0000BB;">./GSE253260.rds</span></span></span></code></pre>
 <pre><code><span><span class="co">## Loading required namespace: Biobase</span></span></code></pre>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># ---- Fallback: GEO metadata + raw counts URL ----</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="va">primary_ok</span> <span class="op">&amp;&amp;</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">expr_tpm</span><span class="op">)</span> <span class="op">||</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">expr_tpm</span><span class="op">)</span> <span class="op">==</span> <span class="fl">0</span> <span class="op">||</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">expr_tpm</span><span class="op">)</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"Downloading GEO metadata for: "</span>, <span class="va">study</span><span class="op">)</span></span>
@@ -466,7 +464,7 @@ patients using PhenoMapR.</p>
 <pre><code><span><span class="co">## Attempting to download expression matrix from: https://www.ncbi.nlm.nih.gov/geo/download/?format=file&amp;type=rnaseq_counts&amp;acc=GSE253260&amp;file=GSE253260_raw_counts_GRCh38.p13_NCBI.tsv.gz</span></span></code></pre>
 <pre><code><span><span class="co">## 'select()' returned 1:1 mapping between keys and columns</span></span></code></pre>
 <pre><code><span><span class="co">## GSE253260 expression loaded from GEO raw counts (fallback).</span></span></code></pre>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">expr_tpm</span><span class="op">)</span> <span class="op">||</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">expr_tpm</span><span class="op">)</span> <span class="op">==</span> <span class="fl">0</span> <span class="op">||</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">expr_tpm</span><span class="op">)</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"Could not load GSE253260 expression (Drive RDS and GEO raw counts both failed or unavailable)."</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
@@ -476,7 +474,7 @@ patients using PhenoMapR.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"GSE253260 TPM matrix: "</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">expr_tpm</span><span class="op">)</span>, <span class="st">" genes × "</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">expr_tpm</span><span class="op">)</span>, <span class="st">" samples"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## GSE253260 TPM matrix: 37674 genes × 317 samples</span></span></code></pre>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pheno</span> <span class="op">&lt;-</span> <span class="fu">Biobase</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/Biobase/man/phenoData.html" class="external-link">pData</a></span><span class="op">(</span><span class="va">gset</span><span class="op">)</span></span>
 <span><span class="va">pheno</span><span class="op">$</span><span class="va">geo_accession</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">)</span></span>
 <span></span>
@@ -555,7 +553,7 @@ patients using PhenoMapR.</p>
 <span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span>
 <span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span>
 <span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span></code></pre>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">age_col</span>  <span class="op">&lt;-</span> <span class="fu">pick_col</span><span class="op">(</span><span class="va">pheno</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"age"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span>
 <span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span>
@@ -624,7 +622,7 @@ patients using PhenoMapR.</p>
 <span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span>
 <span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span>
 <span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span></code></pre>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sex_col</span>  <span class="op">&lt;-</span> <span class="fu">pick_col</span><span class="op">(</span><span class="va">pheno</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sex"</span>, <span class="st">"gender"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span>
 <span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span>
@@ -693,7 +691,7 @@ patients using PhenoMapR.</p>
 <span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span>
 <span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span>
 <span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span></code></pre>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">os_t_col</span> <span class="op">&lt;-</span> <span class="fu">pick_col</span><span class="op">(</span><span class="va">pheno</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"os_days"</span>, <span class="st">"os.time"</span>, <span class="st">"os"</span>, <span class="st">"overall.survival"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span>
 <span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span>
@@ -762,7 +760,7 @@ patients using PhenoMapR.</p>
 <span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span>
 <span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span>
 <span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span></code></pre>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">os_e_col</span> <span class="op">&lt;-</span> <span class="fu">pick_col</span><span class="op">(</span><span class="va">pheno</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"os_censor"</span>, <span class="st">"os_event"</span>, <span class="st">"os.status"</span>, <span class="st">"os_event"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span>
 <span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span>
@@ -831,7 +829,7 @@ patients using PhenoMapR.</p>
 <span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span>
 <span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span>
 <span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span></code></pre>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pfs_t_col</span> <span class="op">&lt;-</span> <span class="fu">pick_col</span><span class="op">(</span><span class="va">pheno</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pfs_days"</span>, <span class="st">"pfs.time"</span>, <span class="st">"pfs"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span>
 <span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span>
@@ -900,7 +898,7 @@ patients using PhenoMapR.</p>
 <span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span>
 <span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span>
 <span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span></code></pre>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pfs_e_col</span> <span class="op">&lt;-</span> <span class="fu">pick_col</span><span class="op">(</span><span class="va">pheno</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pfs_censor"</span>, <span class="st">"pfs_event"</span>, <span class="st">"pfs.status"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span>
 <span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span>
@@ -969,7 +967,7 @@ patients using PhenoMapR.</p>
 <span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span>
 <span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span>
 <span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span></code></pre>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">stage_col</span> <span class="op">&lt;-</span> <span class="fu">pick_col</span><span class="op">(</span><span class="va">pheno</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"stage"</span>, <span class="st">"disease"</span>, <span class="st">"resectable"</span>, <span class="st">"borderline"</span>, <span class="st">"locally"</span>, <span class="st">"meta"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span>
 <span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span>
@@ -1038,7 +1036,7 @@ patients using PhenoMapR.</p>
 <span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span>
 <span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span>
 <span><span class="co">## Warning in FUN(newX[, i], ...): coercing argument of type 'list' to logical</span></span></code></pre>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sample_id</span> <span class="op">&lt;-</span> <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">id_col</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">[[</span><span class="va">id_col</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="kw">else</span> <span class="va">pheno</span><span class="op">$</span><span class="va">geo_accession</span></span>
 <span></span>
 <span><span class="va">clin</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
@@ -1067,12 +1065,12 @@ patients using PhenoMapR.</p>
 <span><span class="va">clin</span><span class="op">$</span><span class="va">stage_group</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu">stage_map</span><span class="op">(</span><span class="va">clin</span><span class="op">$</span><span class="va">stage_raw</span><span class="op">)</span>,</span>
 <span>                           levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Resectable"</span>, <span class="st">"Borderline"</span>, <span class="st">"Locally Advanced"</span>, <span class="st">"Metastatic"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">common_samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/setops.html" class="external-link">intersect</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">expr_tpm</span><span class="op">)</span>, <span class="va">clin</span><span class="op">$</span><span class="va">sample_id</span><span class="op">)</span></span>
+<span><span class="va">common_samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">intersect</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">expr_tpm</span><span class="op">)</span>, <span class="va">clin</span><span class="op">$</span><span class="va">sample_id</span><span class="op">)</span></span>
 <span><span class="va">clin</span> <span class="op">&lt;-</span> <span class="va">clin</span><span class="op">[</span><span class="va">clin</span><span class="op">$</span><span class="va">sample_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">common_samples</span>, , drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span></span>
 <span><span class="va">clin</span> <span class="op">&lt;-</span> <span class="va">clin</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/match.html" class="external-link">match</a></span><span class="op">(</span><span class="va">common_samples</span>, <span class="va">clin</span><span class="op">$</span><span class="va">sample_id</span><span class="op">)</span>, , drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">clin</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">clin</span><span class="op">$</span><span class="va">sample_id</span></span>
 <span><span class="va">expr_tpm</span> <span class="op">&lt;-</span> <span class="va">expr_tpm</span><span class="op">[</span>, <span class="va">common_samples</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span></span></code></pre></div>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressPackageStartupMessages</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/therneau/survival" class="external-link">survival</a></span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressPackageStartupMessages</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rpkgs.datanovia.com/survminer/index.html" class="external-link">survminer</a></span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -1103,7 +1101,7 @@ patients using PhenoMapR.</p>
 <span>    risk.table <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressPackageStartupMessages</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://brooksbenard.github.io/PhenoMapR">PhenoMapR</a></span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">non_met_idx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">clin</span><span class="op">$</span><span class="va">stage_group</span> <span class="op">!=</span> <span class="st">"Metastatic"</span> <span class="op">&amp;</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">clin</span><span class="op">$</span><span class="va">stage_group</span><span class="op">)</span><span class="op">)</span></span>
@@ -1124,7 +1122,7 @@ patients using PhenoMapR.</p>
 <pre><code><span><span class="co">## Detected input type: matrix</span></span></code></pre>
 <pre><code><span><span class="co">## 7426 genes used for scoring against PancreaticCalculating scores...</span></span>
 <span><span class="co">## Completed scoring for Pancreatic</span></span></code></pre>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">met_idx</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">expr_met</span> <span class="op">&lt;-</span> <span class="va">expr_tpm</span><span class="op">[</span>, <span class="va">met_idx</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span></span>
 <span>  <span class="va">scores_met</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PhenoMap.html">PhenoMap</a></span><span class="op">(</span></span>
@@ -1137,7 +1135,7 @@ patients using PhenoMapR.</p>
 <pre><code><span><span class="co">## Detected input type: matrix</span></span></code></pre>
 <pre><code><span><span class="co">## 3007 genes used for scoring against Pancreatic_MetastasisCalculating scores...</span></span>
 <span><span class="co">## Completed scoring for Pancreatic_Metastasis</span></span></code></pre>
-<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">clin</span><span class="op">$</span><span class="va">score_Pancreatic</span> <span class="op">&lt;-</span> <span class="cn">NA_real_</span></span>
 <span><span class="va">clin</span><span class="op">$</span><span class="va">score_Pancreatic_Met</span> <span class="op">&lt;-</span> <span class="cn">NA_real_</span></span>
 <span></span>
@@ -1154,7 +1152,7 @@ patients using PhenoMapR.</p>
 <span>    <span class="va">clin</span><span class="op">$</span><span class="va">score_Pancreatic_Met</span><span class="op">[</span><span class="va">met_idx</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">scores_met</span><span class="op">[</span>, <span class="va">col_met</span><span class="op">]</span></span>
 <span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dat_nonmet</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">clin</span>, <span class="va">stage_group</span> <span class="op">!=</span> <span class="st">"Metastatic"</span> <span class="op">&amp;</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">stage_group</span><span class="op">)</span> <span class="op">&amp;</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">score_Pancreatic</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">dat_nonmet</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
@@ -1168,8 +1166,8 @@ patients using PhenoMapR.</p>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p><img src="gse205154-bulk-survival_files/figure-html/gse253260-nonmet-plots-1.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<p><img src="bulk-survival_files/figure-html/gse253260-nonmet-plots-1.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;"></p>
+<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dat_nonmet_os</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">dat_nonmet</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">OS_Days</span><span class="op">)</span> <span class="op">&amp;</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">OS_Censor</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">dat_nonmet_os</span><span class="op">)</span> <span class="op">&gt;=</span> <span class="fl">10</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">median_cut</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">dat_nonmet_os</span><span class="op">$</span><span class="va">score_Pancreatic</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -1185,7 +1183,7 @@ patients using PhenoMapR.</p>
 <span>    risk.table <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dat_met</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">clin</span>, <span class="va">stage_group</span> <span class="op">==</span> <span class="st">"Metastatic"</span> <span class="op">&amp;</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">score_Pancreatic_Met</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">dat_met_os</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">dat_met</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">OS_Days</span><span class="op">)</span> <span class="op">&amp;</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">OS_Censor</span><span class="op">)</span><span class="op">)</span></span>
@@ -1236,7 +1234,7 @@ Research</em> (2025). <a href="https://precog.stanford.edu/" class="external-lin
 <div class="section level2">
 <h2 id="session-info">Session Info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h2>
-<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## R version 4.5.3 (2026-03-11)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu</span></span>

@@ -35,24 +35,32 @@ report_timing <- function(step_name, t0, obj = NULL) {
   message(sprintf("[%s] Runtime: %.2f s | Memory: %s", step_name, elapsed, mem_mb))
 }
 
-# Vignette data: local paths, then Google Drive (https://drive.google.com/drive/folders/1rKGZBX7sa_Iq8AJb1wcxiRc3oD6v6B5n)
-spatial_subset <- system.file("extdata/vignette_subsets/HT270P1_processed_subset.rds", package = "PhenoMapR")
-use_subset <- nzchar(Sys.getenv("CI", "")) || nzchar(Sys.getenv("PKGDOWN_DEV_MODE", ""))
-rds_path <- if (use_subset && file.exists(spatial_subset)) spatial_subset else "vignettes/HT270P1-S1H2Fc2U1Z1Bs1-H2Bs2-Test_processed.rds"
-if (!file.exists(rds_path)) rds_path <- "Vignettes/HT270P1-S1H2Fc2U1Z1Bs1-H2Bs2-Test_processed.rds"
-if (!file.exists(rds_path)) rds_path <- "HT270P1-S1H2Fc2U1Z1Bs1-H2Bs2-Test_processed.rds"
-if (!file.exists(rds_path) && !nzchar(Sys.getenv("CI", "")) && requireNamespace("googledrive", quietly = TRUE)) {
-  googledrive::drive_deauth()
-  googledrive::drive_download(googledrive::as_id("1HM0dBrQnaNsdm5mnq23aaQ2ILofJ0_vj"), rds_path, overwrite = TRUE)
+# Vignette data: load from Google Drive only
+if (!requireNamespace("googledrive", quietly = TRUE)) {
+  stop("The 'googledrive' package is required. Install with: install.packages('googledrive')")
 }
-if (!file.exists(rds_path)) {
-  url <- Sys.getenv("PHENOMAPR_SPATIAL_RDS_URL", "")
-  if (nzchar(url)) tryCatch({ download.file(url, rds_path, mode = "wb", quiet = TRUE) }, error = function(e) NULL)
-}
+vignette_dir <- if (dir.exists("vignettes")) "vignettes" else if (dir.exists("Vignettes")) "Vignettes" else "."
+if (!dir.exists(vignette_dir)) dir.create(vignette_dir, recursive = TRUE, showWarnings = FALSE)
+
+googledrive::drive_deauth()
+rds_path <- file.path(vignette_dir, "HT270P1-S1H2Fc2U1Z1Bs1-H2Bs2-Test_processed.rds")
+googledrive::drive_download(googledrive::as_id("1HM0dBrQnaNsdm5mnq23aaQ2ILofJ0_vj"), rds_path, overwrite = TRUE)
+```
+
+    ## File downloaded:
+
+    ## • HT270P1-S1H2Fc2U1Z1Bs1-H2Bs2-Test_processed.rds
+    ##   <id: 1HM0dBrQnaNsdm5mnq23aaQ2ILofJ0_vj>
+
+    ## Saved locally as:
+
+    ## • ./HT270P1-S1H2Fc2U1Z1Bs1-H2Bs2-Test_processed.rds
+
+``` r
 has_data <- file.exists(rds_path)
 knitr::opts_chunk$set(eval = has_data)
 if (!has_data) {
-  message("HT270P1-S1H2Fc2U1Z1Bs1-H2Bs2-Test_processed.rds not found. See Vignettes/README.md for data instructions.")
+  message("Could not download spatial RDS from Google Drive.")
 } else {
   suppressMessages({
     seurat <- PhenoMapR::load_rds_fast(rds_path)
@@ -97,7 +105,7 @@ summary(seurat@meta.data[[score_col]])
 ```
 
     ##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-    ## -549.964  -27.319   -1.856   -5.566   22.599  769.170
+    ## -24009.6    487.3   1126.1   1782.4   2458.4  19771.5
 
 ## Score distribution
 
@@ -261,7 +269,7 @@ table(seurat@meta.data[[group_col]], useNA = "ifany")
 
     ## 
     ##   Most Adverse Most Favorable          Other 
-    ##            999            999          17981
+    ##           1073           1073          19312
 
 ## Spatial plots: where do PhenoMapR scores localize?
 
@@ -517,21 +525,21 @@ if (!is.null(group_col)) {
 
     ## Adverse markers (top 5):
 
-    ##           p_val avg_log2FC pct_in_group pct_rest    gene         p_adj
-    ## 1 8.189888e-234   2.760720        0.433    0.069   EPHA2 1.228483e-230
-    ## 2 1.417689e-222   2.810215        0.448    0.082  SLC2A1 2.126534e-219
-    ## 3 4.403854e-192   2.139456        0.544    0.144   BCAR3 6.605781e-189
-    ## 4 8.307727e-190   2.184138        0.404    0.073 TINAGL1 1.246159e-186
-    ## 5 4.163348e-135   1.208025        0.683    0.270    CAP1 6.245021e-132
+    ##   p_val avg_log2FC pct_in_group pct_rest     gene p_adj
+    ## 1     0   3.221594        0.829    0.100      MET     0
+    ## 2     0   2.425253        0.870    0.159    MECOM     0
+    ## 3     0   3.033991        0.916    0.210    ITGA2     0
+    ## 4     0   2.679157        0.851    0.152 BAIAP2L1     0
+    ## 5     0   2.662331        0.801    0.105    RASEF     0
 
     ## Favorable markers (top 5):
 
-    ##           p_val avg_log2FC pct_in_group pct_rest     gene         p_adj
-    ## 1  0.000000e+00   2.822997        0.925    0.292    NEGR1  0.000000e+00
-    ## 2 3.866681e-253   3.337412        0.460    0.078    AGBL4 5.800021e-250
-    ## 3 1.783071e-190   1.975511        0.404    0.072    TTLL7 2.674606e-187
-    ## 4 3.123498e-189   3.050087        0.297    0.036 KIAA1324 4.685247e-186
-    ## 5 7.609929e-182   1.610949        0.780    0.291     ROR1 1.141489e-178
+    ##   p_val avg_log2FC pct_in_group pct_rest     gene p_adj
+    ## 1     0   4.271152        0.627    0.064    NRXN1     0
+    ## 2     0   5.161995        0.626    0.066    RIMS2     0
+    ## 3     0   5.324439        0.640    0.081   KCNMB2     0
+    ## 4     0   5.275982        0.595    0.041    ABCC8     0
+    ## 5     0   5.057609        0.589    0.036 TMEM132D     0
 
 ### Step 2: Heatmap of adverse vs. favorable markers
 
@@ -861,15 +869,15 @@ if (is.null(group_col)) {
 ```
 
     ## Using cell type column: CellType 
-    ## Groups with >= 10  cells: Adverse_Acinar, Adverse_Dendritic, Adverse_Ductal, Adverse_Endothelial, Adverse_Fibroblast, Adverse_Macrophage, Adverse_Plasma, Favorable_Alpha, Favorable_Beta, Favorable_Dendritic, Favorable_Ductal, Favorable_Endothelial, Favorable_Fibroblast, Favorable_Plasma, Favorable_Schwann 
-    ## Using assay for FindAllMarkers: Spatial (full object, ncol= 19979 )
+    ## Groups with >= 10  cells: Adverse_Acinar, Adverse_Ductal, Adverse_Endothelial, Adverse_Fibroblast, Adverse_Macrophage, Adverse_Plasma, Favorable_Acinar, Favorable_Alpha, Favorable_Beta, Favorable_Delta, Favorable_Ductal, Favorable_Fibroblast, Favorable_Plasma, Favorable_Schwann 
+    ## Using assay for FindAllMarkers: Spatial (full object, ncol= 21458 )
 
     ## No markers with min.pct=0.05, logfc.threshold=0.1, return.thresh=0.05; retrying with relaxed thresholds...
 
     ## Retrying with return.thresh=1 (return all genes regardless of p-value)...
 
     ## FindAllMarkers returned 0 marker genes.
-    ## Diagnostic: cells per group: Adverse_Acinar = 20, Adverse_Dendritic = 76, Adverse_Ductal = 431, Adverse_Endothelial = 81, Adverse_Fibroblast = 246, Adverse_Macrophage = 100, Adverse_Plasma = 33, Favorable_Alpha = 195, Favorable_Beta = 76, Favorable_Dendritic = 22, Favorable_Ductal = 54, Favorable_Endothelial = 13, Favorable_Fibroblast = 561, Favorable_Plasma = 37, Favorable_Schwann = 20, Other = 17981 
+    ## Diagnostic: cells per group: Adverse_Acinar = 21, Adverse_Ductal = 784, Adverse_Endothelial = 52, Adverse_Fibroblast = 157, Adverse_Macrophage = 26, Adverse_Plasma = 24, Favorable_Acinar = 11, Favorable_Alpha = 427, Favorable_Beta = 173, Favorable_Delta = 13, Favorable_Ductal = 22, Favorable_Fibroblast = 105, Favorable_Plasma = 296, Favorable_Schwann = 20, Other = 19312 
     ## Diagnostic: assay Spatial
 
 ### Step 4: Heatmap of cell-type-specific markers
@@ -1014,41 +1022,42 @@ sessionInfo()
     ##   [4] spatstat.utils_3.2-2   farver_2.1.2           rmarkdown_2.30        
     ##   [7] fs_1.6.7               ragg_1.5.1             vctrs_0.7.1           
     ##  [10] ROCR_1.0-12            spatstat.explore_3.7-0 paletteer_1.7.0       
-    ##  [13] htmltools_0.5.9        sass_0.4.10            sctransform_0.4.3     
-    ##  [16] parallelly_1.46.1      KernSmooth_2.23-26     bslib_0.10.0          
-    ##  [19] htmlwidgets_1.6.4      desc_1.4.3             ica_1.0-3             
-    ##  [22] plyr_1.8.9             plotly_4.12.0          zoo_1.8-15            
-    ##  [25] cachem_1.1.0           igraph_2.2.2           mime_0.13             
-    ##  [28] lifecycle_1.0.5        pkgconfig_2.0.3        Matrix_1.7-4          
-    ##  [31] R6_2.6.1               fastmap_1.2.0          fitdistrplus_1.2-6    
-    ##  [34] future_1.69.0          shiny_1.13.0           digest_0.6.39         
-    ##  [37] rematch2_2.1.2         patchwork_1.3.2        tensor_1.5.1          
-    ##  [40] prismatic_1.1.2        RSpectra_0.16-2        irlba_2.3.7           
-    ##  [43] textshaping_1.0.5      labeling_0.4.3         progressr_0.18.0      
-    ##  [46] spatstat.sparse_3.1-0  httr_1.4.8             polyclip_1.10-7       
-    ##  [49] abind_1.4-8            compiler_4.5.3         withr_3.0.2           
-    ##  [52] S7_0.2.1               fastSave_0.1.0         fastDummies_1.7.5     
-    ##  [55] MASS_7.3-65            tools_4.5.3            lmtest_0.9-40         
-    ##  [58] otel_0.2.0             httpuv_1.6.16          future.apply_1.20.2   
-    ##  [61] goftest_1.2-3          glue_1.8.0             nlme_3.1-168          
-    ##  [64] promises_1.5.0         grid_4.5.3             Rtsne_0.17            
-    ##  [67] cluster_2.1.8.2        reshape2_1.4.5         generics_0.1.4        
-    ##  [70] gtable_0.3.6           spatstat.data_3.1-9    tidyr_1.3.2           
-    ##  [73] data.table_1.18.2.1    spatstat.geom_3.7-0    RcppAnnoy_0.0.23      
-    ##  [76] ggrepel_0.9.7          RANN_2.6.2             pillar_1.11.1         
-    ##  [79] stringr_1.6.0          spam_2.11-3            RcppHNSW_0.6.0        
-    ##  [82] limma_3.66.0           later_1.4.8            splines_4.5.3         
-    ##  [85] lattice_0.22-9         survival_3.8-6         deldir_2.0-4          
-    ##  [88] tidyselect_1.2.1       miniUI_0.1.2           pbapply_1.7-4         
-    ##  [91] knitr_1.51             gridExtra_2.3          scattermore_1.2       
-    ##  [94] xfun_0.56              statmod_1.5.1          matrixStats_1.5.0     
-    ##  [97] pheatmap_1.0.13        stringi_1.8.7          lazyeval_0.2.2        
-    ## [100] yaml_2.3.12            evaluate_1.0.5         codetools_0.2-20      
-    ## [103] tibble_3.3.1           cli_3.6.5              uwot_0.2.4            
-    ## [106] xtable_1.8-8           reticulate_1.45.0      systemfonts_1.3.2     
-    ## [109] jquerylib_0.1.4        Rcpp_1.1.1             globals_0.19.0        
-    ## [112] spatstat.random_3.4-4  png_0.1-8              spatstat.univar_3.1-6 
-    ## [115] parallel_4.5.3         pkgdown_2.2.0          presto_1.0.0          
-    ## [118] dotCall64_1.2          listenv_0.10.1         viridisLite_0.4.3     
-    ## [121] scales_1.4.0           ggridges_0.5.7         purrr_1.2.1           
-    ## [124] rlang_1.1.7            cowplot_1.2.0
+    ##  [13] htmltools_0.5.9        curl_7.0.0             sass_0.4.10           
+    ##  [16] sctransform_0.4.3      parallelly_1.46.1      KernSmooth_2.23-26    
+    ##  [19] bslib_0.10.0           htmlwidgets_1.6.4      desc_1.4.3            
+    ##  [22] ica_1.0-3              plyr_1.8.9             plotly_4.12.0         
+    ##  [25] zoo_1.8-15             cachem_1.1.0           igraph_2.2.2          
+    ##  [28] mime_0.13              lifecycle_1.0.5        pkgconfig_2.0.3       
+    ##  [31] Matrix_1.7-4           R6_2.6.1               fastmap_1.2.0         
+    ##  [34] fitdistrplus_1.2-6     future_1.69.0          shiny_1.13.0          
+    ##  [37] digest_0.6.39          rematch2_2.1.2         patchwork_1.3.2       
+    ##  [40] tensor_1.5.1           prismatic_1.1.2        RSpectra_0.16-2       
+    ##  [43] irlba_2.3.7            textshaping_1.0.5      labeling_0.4.3        
+    ##  [46] progressr_0.18.0       spatstat.sparse_3.1-0  httr_1.4.8            
+    ##  [49] polyclip_1.10-7        abind_1.4-8            compiler_4.5.3        
+    ##  [52] gargle_1.6.1           withr_3.0.2            S7_0.2.1              
+    ##  [55] fastSave_0.1.0         fastDummies_1.7.5      MASS_7.3-65           
+    ##  [58] tools_4.5.3            lmtest_0.9-40          otel_0.2.0            
+    ##  [61] googledrive_2.1.2      httpuv_1.6.16          future.apply_1.20.2   
+    ##  [64] goftest_1.2-3          glue_1.8.0             nlme_3.1-168          
+    ##  [67] promises_1.5.0         grid_4.5.3             Rtsne_0.17            
+    ##  [70] cluster_2.1.8.2        reshape2_1.4.5         generics_0.1.4        
+    ##  [73] gtable_0.3.6           spatstat.data_3.1-9    tidyr_1.3.2           
+    ##  [76] data.table_1.18.2.1    spatstat.geom_3.7-0    RcppAnnoy_0.0.23      
+    ##  [79] ggrepel_0.9.7          RANN_2.6.2             pillar_1.11.1         
+    ##  [82] stringr_1.6.0          spam_2.11-3            RcppHNSW_0.6.0        
+    ##  [85] limma_3.66.0           later_1.4.8            splines_4.5.3         
+    ##  [88] lattice_0.22-9         survival_3.8-6         deldir_2.0-4          
+    ##  [91] tidyselect_1.2.1       miniUI_0.1.2           pbapply_1.7-4         
+    ##  [94] knitr_1.51             gridExtra_2.3          scattermore_1.2       
+    ##  [97] xfun_0.56              statmod_1.5.1          matrixStats_1.5.0     
+    ## [100] pheatmap_1.0.13        stringi_1.8.7          lazyeval_0.2.2        
+    ## [103] yaml_2.3.12            evaluate_1.0.5         codetools_0.2-20      
+    ## [106] tibble_3.3.1           cli_3.6.5              uwot_0.2.4            
+    ## [109] xtable_1.8-8           reticulate_1.45.0      systemfonts_1.3.2     
+    ## [112] jquerylib_0.1.4        Rcpp_1.1.1             globals_0.19.0        
+    ## [115] spatstat.random_3.4-4  png_0.1-8              spatstat.univar_3.1-6 
+    ## [118] parallel_4.5.3         pkgdown_2.2.0          presto_1.0.0          
+    ## [121] dotCall64_1.2          listenv_0.10.1         viridisLite_0.4.3     
+    ## [124] scales_1.4.0           ggridges_0.5.7         purrr_1.2.1           
+    ## [127] rlang_1.1.7            cowplot_1.2.0

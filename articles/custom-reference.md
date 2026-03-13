@@ -168,7 +168,7 @@ plot(fit_primary, col = c("blue", "red"), lwd = 2, xlab = "Time", ylab = "Surviv
 legend("bottomleft", legend = c("Low score", "High score"), col = c("blue", "red"), lwd = 2, bty = "n")
 ```
 
-![](gse205154-custom-reference_files/figure-html/km-primary-1.png)
+![](custom-reference_files/figure-html/km-primary-1.png)
 
 ``` r
 lr_primary <- survdiff(Surv(survival_time, survival_event) ~ custom_grp, data = dat_primary)
@@ -191,7 +191,7 @@ plot(fit_met, col = c("blue", "red"), lwd = 2, xlab = "Time", ylab = "Survival p
 legend("bottomleft", legend = c("Low score", "High score"), col = c("blue", "red"), lwd = 2, bty = "n")
 ```
 
-![](gse205154-custom-reference_files/figure-html/km-metastatic-1.png)
+![](custom-reference_files/figure-html/km-metastatic-1.png)
 
 ``` r
 lr_met <- survdiff(Surv(survival_time, survival_event) ~ custom_grp, data = dat_met)
