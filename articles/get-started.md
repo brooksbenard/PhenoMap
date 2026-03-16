@@ -177,9 +177,9 @@ references in PhenoMapR are sourced from **PRECOG 2.0** ([Benard et al.,
 *Nucleic Acids Research*
 2026](https://academic.oup.com/nar/article/54/D1/D1579/8324954)).
 
-**Reference coverage** — Cancer types available for scoring in each
-built-in database (TCGA, Adult PRECOG, Pediatric PRECOG, ICI PRECOG).
-Use `list_cancer_types("precog")` (or `"tcga"`, `"pediatric_precog"`,
+Cancer types available for scoring in each built-in database (TCGA,
+Adult PRECOG, Pediatric PRECOG, ICI PRECOG). Use
+`list_cancer_types("precog")` (or `"tcga"`, `"pediatric_precog"`,
 `"ici_precog"`) to see labels for your reference of choice.
 
 ![Reference coverage by database and cancer
