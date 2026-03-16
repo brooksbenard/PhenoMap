@@ -1283,7 +1283,7 @@ sessionInfo()
     ##  [3] httr2_1.2.2                 rlang_1.1.7                
     ##  [5] magrittr_2.0.4              otel_0.2.0                 
     ##  [7] matrixStats_1.5.0           compiler_4.5.3             
-    ##  [9] RSQLite_2.4.6               png_0.1-8                  
+    ##  [9] RSQLite_2.4.6               png_0.1-9                  
     ## [11] systemfonts_1.3.2           vctrs_0.7.1                
     ## [13] crayon_1.5.3                pkgconfig_2.0.3            
     ## [15] fastmap_1.2.0               backports_1.5.0            

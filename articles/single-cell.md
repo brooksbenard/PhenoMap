@@ -37,6 +37,10 @@ googledrive::drive_download(googledrive::as_id("1PolTXggREz8XmhutCLTQJGCfKxFAzqM
 googledrive::drive_download(googledrive::as_id("17mqxnKOZJn0jW2iD9RV0wZeWsilAIwdu"), "PAAD_CRA001160_CellMetainfo_table.tsv", overwrite = TRUE)
 
 expr_mat <- Seurat::Read10X_h5("PAAD_CRA001160_expression.h5")
+if (is.list(expr_mat)) {
+  # Read10X_h5 can return a named list of matrices when multiple feature types exist.
+  expr_mat <- expr_mat[[1]]
+}
 meta <- read.delim("PAAD_CRA001160_CellMetainfo_table.tsv", stringsAsFactors = FALSE, check.names = FALSE)
 
 cell_ids <- colnames(expr_mat)
@@ -269,6 +273,41 @@ ggplot(ct_long, aes(x = Cell_type, y = n, fill = pg)) +
 
 ![](single-cell_files/figure-html/celltype-in-extreme-percentiles-1.png)
 
+When original cell type annotations are available, the same
+representation can be shown for **Celltype (original)** labels.
+
+``` r
+if (!is.null(celltype_original_col) && celltype_original_col %in% names(meta)) {
+  ct_orig_in_extreme <- meta[idx_extreme, ]
+  ct_orig_in_extreme$pg <- pg_tmp[idx_extreme]
+  ct_orig_counts <- as.data.frame(table(Cell_type_original = ct_orig_in_extreme[[celltype_original_col]], pg = ct_orig_in_extreme$pg))
+  ct_orig_wide <- reshape(ct_orig_counts, idvar = "Cell_type_original", timevar = "pg", direction = "wide")
+  names(ct_orig_wide) <- gsub("Freq\\.", "", names(ct_orig_wide))
+  for (c in c("Most Adverse", "Most Favorable")) {
+    if (!c %in% names(ct_orig_wide)) ct_orig_wide[[c]] <- 0
+  }
+  ct_orig_wide$Cell_type_original <- factor(ct_orig_wide$Cell_type_original, levels = ct_orig_wide$Cell_type_original[order(ct_orig_wide$`Most Adverse`, decreasing = TRUE)])
+  ct_orig_long <- rbind(
+    data.frame(Cell_type_original = ct_orig_wide$Cell_type_original, pg = "Most Favorable", n = -ct_orig_wide$`Most Favorable`),
+    data.frame(Cell_type_original = ct_orig_wide$Cell_type_original, pg = "Most Adverse", n = ct_orig_wide$`Most Adverse`)
+  )
+  ct_orig_long$pg <- factor(ct_orig_long$pg, levels = c("Most Favorable", "Most Adverse"))
+  max_n_orig <- max(abs(ct_orig_long$n), 1)
+  print(ggplot(ct_orig_long, aes(x = Cell_type_original, y = n, fill = pg)) +
+    geom_col() +
+    coord_flip() +
+    scale_fill_manual(values = c(`Most Adverse` = "#B2182B", `Most Favorable` = "#2166AC"), name = "Prognostic group") +
+    scale_y_continuous(breaks = seq(-max_n_orig, max_n_orig, length.out = 5), labels = abs(seq(-max_n_orig, max_n_orig, length.out = 5))) +
+    theme_minimal() +
+    theme(axis.text.y = element_text(size = 9), legend.position = "right") +
+    labs(x = "Cell type (original)", y = "Cell count (5th %ile)", title = "CRA001160: Celltype (original) in adverse vs favorable extremes"))
+} else {
+  message("Celltype (original) not in metadata; skipping representation by original labels.")
+}
+```
+
+![](single-cell_files/figure-html/celltype-original-in-extreme-percentiles-1.png)
+
 ## Prognostic groups and marker genes
 
 We define the “Most Adverse” and “Most Favorable” cells from the
@@ -346,9 +385,12 @@ if (is.null(markers)) {
   mat_scaled <- mat_scaled[, ord, drop = FALSE]
   meta_ord <- meta[ord, ]
 
+  # Use raw (un-normalized) PhenoMapR scores for the heatmap annotation.
+  # Clip to a symmetric range so the color scale is centered at 0 (blue < 0, white = 0, red > 0).
   score_vals <- meta_ord[[score_precog_col]]
-  lim <- max(abs(range(score_vals, na.rm = TRUE)), 0.01)
-  score_norm <- score_vals / lim
+  lim <- max(abs(score_vals), na.rm = TRUE)
+  if (!is.finite(lim) || lim <= 0) lim <- 0.01
+  score_for_anno <- pmax(pmin(score_vals, lim), -lim)
   ct_anno_col <- if (!is.null(celltype_original_col) && celltype_original_col %in% names(meta_ord)) celltype_original_col else celltype_col
   sample_type_col <- NULL
   for (cand in c("Sample type", "Tissue", "Type", "Cancer", "Condition")) {
@@ -363,7 +405,7 @@ if (is.null(markers)) {
   if (is.null(sample_type_col) && "Sample type" %in% names(meta_ord)) sample_type_col <- "Sample type"
 
   ann_col <- data.frame(
-    `PhenoMapR score` = score_norm,
+    `PhenoMapR score` = score_for_anno,
     `Cell type` = factor(meta_ord[[ct_anno_col]]),
     `Prognostic group` = factor(meta_ord[[group_col]], levels = c("Most Adverse", "Other", "Most Favorable")),
     check.names = FALSE
@@ -410,9 +452,6 @@ if (is.null(markers)) {
 
 ![](single-cell_files/figure-html/heatmap-markers-1.png)
 
-PhenoMapR score is normalized to \[-1, 1\] so the bar is blue for
-negative, white at 0, and red for positive.
-
 ## Proportion of prognostic cells by sample and cell type
 
 Stacked bar (top): proportion of Most Adverse and Most Favorable cells
@@ -432,6 +471,7 @@ if (is.null(sample_col)) sample_col <- names(meta)[1]
 meta_plot <- meta
 meta_plot$sample <- meta_plot[[sample_col]]
 meta_plot$cell_type <- meta_plot[[celltype_col]]
+meta_plot$cell_type_original <- if (!is.null(celltype_original_col) && celltype_original_col %in% names(meta_plot)) meta_plot[[celltype_original_col]] else NA_character_
 meta_plot$prognostic_grp <- meta_plot[[group_col]]
 sample_lev <- levels(factor(meta[[sample_col]]))
 meta_plot$sample <- factor(meta_plot[[sample_col]], levels = sample_lev)
@@ -478,7 +518,7 @@ if (nrow(meta_plot) > 0) {
     scale_x_continuous(breaks = seq_along(sample_lev), labels = sample_lev) +
     scale_y_continuous(expand = c(0, 0)) +
     theme_minimal() +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1), axis.title.x = element_blank(), legend.position = "right") +
+    theme(axis.text.x = element_blank(), axis.ticks.x = element_blank(), axis.title.x = element_blank(), legend.position = "right") +
     labs(y = "Proportion (5th %ile)", title = "Adverse vs favorable per sample")
 
   p_dots <- ggplot(counts, aes(x = x_num, y = cell_type, size = proportion, color = pg)) +
@@ -487,15 +527,42 @@ if (nrow(meta_plot) > 0) {
     scale_size_continuous(range = c(0, 8), name = "Proportion") +
     scale_x_continuous(breaks = seq_along(sample_lev), labels = sample_lev) +
     theme_minimal() +
-    theme(panel.grid.major.y = element_line(color = "grey90"), axis.title = element_text(size = 10), axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "right") +
+    theme(panel.grid.major.y = element_line(color = "grey90"), axis.title = element_text(size = 10), axis.text.x = element_blank(), axis.ticks.x = element_blank(), legend.position = "right") +
     labs(x = "Sample", y = "Cell type", title = "By cell type and sample (CRA001160)")
+
+  # Same plot, but using original cell type labels (when available)
+  p_dots_orig <- NULL
+  if (!all(is.na(meta_plot$cell_type_original))) {
+    meta_plot$cell_type_original <- factor(meta_plot$cell_type_original)
+    counts_orig <- as.data.frame(table(meta_plot$sample, meta_plot$cell_type_original, meta_plot$prognostic_grp, dnn = c("sample", "cell_type_original", "pg")))
+    totals_orig <- aggregate(counts_orig$Freq, by = list(sample = counts_orig$sample, pg = counts_orig$pg), FUN = sum)
+    names(totals_orig)[3] <- "total"
+    counts_orig <- merge(counts_orig, totals_orig, by = c("sample", "pg"))
+    counts_orig$proportion <- counts_orig$Freq / counts_orig$total
+    counts_orig$proportion[counts_orig$total == 0] <- 0
+    counts_orig$x_num <- as.numeric(counts_orig$sample) + ifelse(counts_orig$pg == "Most Adverse", -0.18, 0.18)
+
+    p_dots_orig <- ggplot(counts_orig, aes(x = x_num, y = cell_type_original, size = proportion, color = pg)) +
+      geom_point(alpha = 0.85) +
+      scale_color_manual(values = c(`Most Adverse` = "#B2182B", `Most Favorable` = "#2166AC"), name = "Prognostic group") +
+      scale_size_continuous(range = c(0, 8), name = "Proportion") +
+      scale_x_continuous(breaks = seq_along(sample_lev), labels = sample_lev) +
+      theme_minimal() +
+      theme(panel.grid.major.y = element_line(color = "grey90"), axis.title = element_text(size = 10), axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "right") +
+      labs(x = "Sample", y = "Cell type (original)", title = "By Celltype (original) and sample (CRA001160)")
+  }
 
   if (requireNamespace("patchwork", quietly = TRUE)) {
     suppressPackageStartupMessages(library(patchwork))
-    print(p_bar / p_dots + plot_layout(heights = c(1, 2)))
+    if (!is.null(p_dots_orig)) {
+      print(p_bar / p_dots / p_dots_orig + plot_layout(heights = c(1, 2, 2)))
+    } else {
+      print(p_bar / p_dots + plot_layout(heights = c(1, 2)))
+    }
   } else {
     print(p_bar)
     print(p_dots)
+    if (!is.null(p_dots_orig)) print(p_dots_orig)
   }
 } else {
   message("No Most Adverse or Most Favorable cells found; proportion plot skipped.")
@@ -572,7 +639,7 @@ sessionInfo()
     ##  [28] zoo_1.8-15             cachem_1.1.0           igraph_2.2.2          
     ##  [31] mime_0.13              lifecycle_1.0.5        pkgconfig_2.0.3       
     ##  [34] Matrix_1.7-4           R6_2.6.1               fastmap_1.2.0         
-    ##  [37] fitdistrplus_1.2-6     future_1.69.0          shiny_1.13.0          
+    ##  [37] fitdistrplus_1.2-6     future_1.70.0          shiny_1.13.0          
     ##  [40] digest_0.6.39          rematch2_2.1.2         tensor_1.5.1          
     ##  [43] prismatic_1.1.2        RSpectra_0.16-2        irlba_2.3.7           
     ##  [46] textshaping_1.0.5      labeling_0.4.3         progressr_0.18.0      
@@ -600,7 +667,7 @@ sessionInfo()
     ## [112] codetools_0.2-20       tibble_3.3.1           cli_3.6.5             
     ## [115] uwot_0.2.4             xtable_1.8-8           reticulate_1.45.0     
     ## [118] systemfonts_1.3.2      jquerylib_0.1.4        Rcpp_1.1.1            
-    ## [121] spatstat.random_3.4-4  globals_0.19.1         png_0.1-8             
+    ## [121] spatstat.random_3.4-4  globals_0.19.1         png_0.1-9             
     ## [124] spatstat.univar_3.1-6  parallel_4.5.3         pkgdown_2.2.0         
     ## [127] presto_1.0.0           dotCall64_1.2          listenv_0.10.1        
     ## [130] viridisLite_0.4.3      scales_1.4.0           ggridges_0.5.7        
