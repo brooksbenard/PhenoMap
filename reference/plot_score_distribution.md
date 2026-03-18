@@ -8,7 +8,7 @@ Simple histogram of score distribution using ggplot2
 plot_score_distribution(
   scores,
   score_column = NULL,
-  main = "Score Distribution",
+  main = "Phenotype gene z-score distribution",
   base_size = 14
 )
 ```

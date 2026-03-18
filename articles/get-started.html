@@ -407,21 +407,24 @@ z-scores) and score your input expression data.</p>
 <div class="section level3">
 <h3 id="derive-reference-from-bulk-expression-and-phenotype">Derive reference from bulk expression and phenotype<a class="anchor" aria-label="anchor" href="#derive-reference-from-bulk-expression-and-phenotype"></a>
 </h3>
-<p>If you have bulk expression (samples × genes) and a phenotype
-(e.g. clinical response (R/NR), time-to-survival (with censor), or any
-other continuous phenotype), the <code>PhenoMapR</code>
+<p>If you have bulk expression (<strong>genes as rows, samples as
+columns</strong>) and a phenotype (e.g. clinical response (R/NR),
+time-to-survival (with censor), or any other continuous phenotype), the
+<code>PhenoMapR</code>
 <strong><code><a href="../reference/derive_reference_from_bulk.html">derive_reference_from_bulk()</a></code></strong> function
-allows you to derive gene-level z-scores and use them as the reference
-for scoring bulk, single-cell, or spatial input data. The function
-cleans gene names to currently approved HUGO symbols, checks/normalizes
-expression, then computes gene association z-scores (Cox for survival,
+derives gene-level z-scores for use as the reference when scoring bulk,
+single-cell, or spatial data. The function expects genes as rows and
+samples as columns; if the matrix appears to be the opposite, it will
+transpose and message. It then cleans gene names to approved HUGO
+symbols (if <code>HGNChelper</code> is installed), checks/normalizes
+expression, and computes gene association z-scores (Cox for survival,
 logistic regression for binary, correlation for continuous).</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Bulk: samples in rows, genes in columns</span></span>
-<span><span class="va">bulk_expr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span>   <span class="co"># e.g. 50 samples × 5000 genes</span></span>
+<code class="sourceCode R"><span><span class="co"># Bulk: genes (rows) x samples (columns); sample IDs = colnames</span></span>
+<span><span class="va">bulk_expr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span>   <span class="co"># e.g. 5000 genes x 50 samples</span></span>
 <span><span class="va">pheno</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>  sample_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">bulk_expr</span><span class="op">)</span>,</span>
-<span>  response <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"R"</span>, <span class="st">"NR"</span>, <span class="va">...</span><span class="op">)</span>  <span class="co"># or time + event for survival</span></span>
+<span>  sample_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">bulk_expr</span><span class="op">)</span>,   <span class="co"># must match expression column names</span></span>
+<span>  response <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"R"</span>, <span class="st">"NR"</span>, <span class="va">...</span><span class="op">)</span>       <span class="co"># or time + event for survival</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Derive reference z-scores</span></span>

@@ -61,7 +61,8 @@ plot_reference_signature(
 
 The return value of
 [`ComplexHeatmap::draw()`](https://rdrr.io/pkg/ComplexHeatmap/man/draw-dispatch.html)
-(invisibly), so the plot is drawn in the current device.
+(a `HeatmapList` object), invisibly. The plot is drawn in the current
+device.
 
 ## Examples
 

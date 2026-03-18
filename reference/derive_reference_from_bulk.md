@@ -1,8 +1,9 @@
 # Derive Reference Z-Scores from Bulk Expression and Phenotype
 
-When you have bulk expression (samples × genes) and a phenotype (binary,
-continuous, or survival), this function computes gene-level association
-z-scores that can be used as a custom reference in
+When you have bulk expression (**genes as rows, samples as columns**)
+and a phenotype (binary, continuous, or survival), this function
+computes gene-level association z-scores that can be used as a custom
+reference in
 [`PhenoMap`](https://brooksbenard.github.io/PhenoMapR/reference/PhenoMap.md).
 
 ## Usage
@@ -16,7 +17,6 @@ derive_reference_from_bulk(
   phenotype_type = c("auto", "survival", "binary", "continuous"),
   survival_time = NULL,
   survival_event = NULL,
-  gene_axis = NULL,
   normalize = TRUE,
   hugo_species = c("human", "mouse"),
   verbose = TRUE
@@ -27,20 +27,22 @@ derive_reference_from_bulk(
 
 - bulk_expression:
 
-  Matrix or data.frame. Bulk expression with **samples as rows** and
-  **genes as columns**. Can also be genes × samples; the function will
-  detect and transpose so that rows = samples.
+  Matrix or data.frame. Bulk expression with **genes as rows** and
+  **samples as columns**. If the matrix appears to be samples × genes
+  (e.g. fewer rows than columns), the function will transpose and
+  message the user.
 
 - phenotype:
 
   Data.frame with sample identifiers and phenotype column(s). Must align
-  with `bulk_expression` by sample ID (see `sample_id_column`).
+  with `bulk_expression` by sample ID (see `sample_id_column`); sample
+  IDs must match the **column names** of `bulk_expression`.
 
 - sample_id_column:
 
-  Character. Column name in `phenotype` that matches rownames (or
-  colnames if transposed) of `bulk_expression`. If `NULL`, the first
-  column of `phenotype` is used.
+  Character. Column name in `phenotype` that matches the column names of
+  `bulk_expression` (sample IDs). If `NULL`, the first column of
+  `phenotype` is used.
 
 - phenotype_column:
 
@@ -65,12 +67,6 @@ derive_reference_from_bulk(
   Character. Column name in `phenotype` for event indicator (0/1 or
   FALSE/TRUE). Required when `phenotype_type = "survival"`.
 
-- gene_axis:
-
-  Character. Either `"rows"` (genes are rows) or `"cols"` (genes are
-  columns). If `NULL`, guessed by dimensions (if nrow \> ncol, assume
-  samples × genes).
-
 - normalize:
 
   Logical. If `TRUE`, run normalization when expression looks like
@@ -93,19 +89,21 @@ phenotype-association z-scores, suitable for `reference` in
 
 ## Details
 
-Steps: (1) clean gene names to approved HUGO symbols, (2) check if
-expression is already normalized/scaled and normalize if needed, (3)
-compute phenotype association z-scores per gene (Cox for survival,
-logistic regression for binary, correlation for continuous).
+Steps: (1) ensure genes × samples format (transpose with message if
+heuristic suggests the matrix was provided as samples × genes), (2)
+clean gene names to approved HUGO symbols, (3) check if expression is
+normalized and normalize if needed, (4) compute phenotype association
+z-scores per gene (Cox for survival, logistic regression for binary,
+correlation for continuous).
 
 ## Examples
 
 ``` r
 if (FALSE) { # \dontrun{
-# Simulated bulk: 50 samples × 100 genes
+# Simulated bulk: genes (rows) x samples (columns)
 set.seed(1)
-bulk <- matrix(rnorm(50 * 100), 50, 100,
-  dimnames = list(paste0("S", 1:50), paste0("G", 1:100)))
+bulk <- matrix(rnorm(100 * 50), 100, 50,
+  dimnames = list(paste0("G", 1:100), paste0("S", 1:50)))
 pheno <- data.frame(
   sample_id = paste0("S", 1:50),
   response = sample(c("R", "NR"), 50, replace = TRUE))
