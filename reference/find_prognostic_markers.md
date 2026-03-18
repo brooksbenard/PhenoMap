@@ -1,8 +1,11 @@
 # Find Unique Marker Genes for Adverse and Favorable Prognostic Groups
 
-Uses Seurat's `FindMarkers` to perform differential expression between
-the top (adverse) and bottom (favorable) prognostic groups versus the
-rest. Requires the Seurat package.
+Performs differential expression between the top (adverse) and bottom
+(favorable) prognostic groups versus the rest. For `Seurat` input, uses
+[`Seurat::FindMarkers`](https://satijalab.org/seurat/reference/FindMarkers.html).
+For matrix, `Matrix`, or `SingleCellExperiment` input, uses a
+Wilcoxon-based path (presto if available, else base R) and does not
+require Seurat.
 
 ## Usage
 
@@ -28,8 +31,9 @@ find_prognostic_markers(
 
 - expression:
 
-  Expression matrix (genes x cells), a Seurat object, or a
-  SingleCellExperiment. Must match cells in `group_labels`.
+  Expression matrix (genes x cells), a `Matrix` (e.g. `dgCMatrix`), a
+  Seurat object, or a SingleCellExperiment. Must match cells in
+  `group_labels`.
 
 - group_labels:
 
@@ -90,7 +94,8 @@ find_prognostic_markers(
 - ...:
 
   Additional arguments passed to
-  [`Seurat::FindMarkers`](https://satijalab.org/seurat/reference/FindMarkers.html).
+  [`Seurat::FindMarkers`](https://satijalab.org/seurat/reference/FindMarkers.html)
+  when input is a Seurat object (ignored for matrix/SCE/Matrix input).
 
 ## Value
 

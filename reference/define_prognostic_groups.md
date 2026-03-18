@@ -33,8 +33,8 @@ A data.frame with:
 - `cell_id`: same as row names of `scores`
 
 - For each score column: a `prognostic_group_<name>` column with values
-  `"adverse"` (top percentile), `"favorable"` (bottom percentile), or
-  `"middle"`
+  `"Most Adverse"` (top percentile), `"Most Favorable"` (bottom
+  percentile), or `"Other"`
 
 ## Examples
 

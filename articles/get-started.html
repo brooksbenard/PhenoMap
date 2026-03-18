@@ -90,20 +90,21 @@ gene expression profiling have been applied at scale in large,
 clinically-annotated datasets, providing robust signatures for phenotype
 associations such as outcomes across cancers (e.g. <a href="https://precog.stanford.edu/" class="external-link">PRECOG 2.0</a>). <strong>PhenoMapR
 bridges this gap between the improved resolution of single-cell/spatial
-approaches and the phenotype signals identified across bulk expression
-studies</strong> by mapping the phenotypic signal directly onto
-individual cells and spatial locations. Although developed with a
-cancer-centric focus, PhenoMapR can be used to map any phenotypic signal
-associated with bulk expression datasets across transcriptomic data
-modalities.</p>
-<hr>
+approaches and the robust phenotype signals identified across bulk
+expression studies by mapping the phenotypic signal directly onto
+individual cells and spatial locations</strong>. Although developed with
+a cancer-centric focus, <code>PhenoMapR</code> can be used to map any
+phenotypic signal associated with bulk expression datasets across
+transcriptomic data modalities.</p>
+<!-- ---  -->
+<hr style="height:4px;border:none;color:#D3D3D3;background-color:#D3D3D3;">
 </div>
 <div class="section level2">
 <h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
 </h2>
-<p>PhenoMapR is intended to be a flexible framework for mapping
-phenotypic signal between gene expression data acquired and stored in
-different formats. Some of the main features of PhenoMapR are:</p>
+<p><code>PhenoMapR</code> is intended to be a flexible framework for
+mapping phenotypic signal between gene expression data acquired and
+stored in different formats. Some of the main features are:</p>
 <table class="table">
 <colgroup>
 <col width="44%">
@@ -143,12 +144,17 @@ z-score phenotype references</td>
 associated cells/spots</td>
 </tr>
 <tr class="even">
+<td align="left"><strong>Visualization</strong></td>
+<td align="left">Summary plots for dataset results (marker gene
+heatmaps, cell type score enrichment, etc.)</td>
+</tr>
+<tr class="odd">
 <td align="left"><strong>Efficient</strong></td>
 <td align="left">Optimized approach for ultra-fast scoring</td>
 </tr>
 </tbody>
 </table>
-<hr>
+<!-- ---  --><hr style="height:4px;border:none;color:#D3D3D3;background-color:#D3D3D3;">
 </div>
 <div class="section level2">
 <h2 id="getting-started">Getting Started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
@@ -156,61 +162,67 @@ associated cells/spots</td>
 <p>The primary function of PhenoMapR is
 <strong><code><a href="../reference/PhenoMap.html">PhenoMap()</a></code></strong>. The basic use of this function
 takes a gene expression file <strong>+</strong> a reference phenotype
-signature and generates a dataframe of PhenoMapR score per
-sample/cell/spot. For single-cell and spatial inputs, a sample-level
-PhenoMapR score can be generated using the pseudobulk argument.</p>
+signature and generates a PhenoMapR score per sample/cell/spot. For
+single-cell and spatial inputs, a sample-level PhenoMapR score can be
+generated using the pseudobulk argument.</p>
 <p><strong><code><a href="../reference/PhenoMap.html">PhenoMap()</a></code> arguments:</strong></p>
 <table class="table">
 <colgroup>
-<col width="43%">
+<col width="44%">
 <col width="56%">
 </colgroup>
 <thead><tr class="header">
-<th>Argument</th>
-<th>Description</th>
+<th align="left">Argument</th>
+<th align="left">Description</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td><strong>expression</strong></td>
-<td>Expression data (matrix, Seurat, SCE, etc.)</td>
+<td align="left"><strong>expression</strong></td>
+<td align="left">Expression data (matrix, Seurat, SCE, etc.)</td>
 </tr>
 <tr class="even">
-<td><strong>reference</strong></td>
-<td>Reference dataset name or custom data.frame</td>
+<td align="left"><strong>reference</strong></td>
+<td align="left">Reference dataset name or custom data.frame</td>
 </tr>
 <tr class="odd">
-<td><strong>cancer_type</strong></td>
-<td>Cancer type label (required for built-in references)</td>
+<td align="left"><strong>cancer_type</strong></td>
+<td align="left">Cancer type label (required for built-in
+references)</td>
 </tr>
 <tr class="even">
-<td><strong>z_score_cutoff</strong></td>
-<td>Absolute z-score threshold (default: 2)</td>
+<td align="left"><strong>z_score_cutoff</strong></td>
+<td align="left">Absolute z-score threshold (default: 2)</td>
 </tr>
 <tr class="odd">
-<td><strong>pseudobulk</strong></td>
-<td>Aggregate samples/slices before scoring? (default: FALSE)</td>
+<td align="left"><strong>pseudobulk</strong></td>
+<td align="left">Aggregate samples/slices before scoring? (default:
+FALSE)</td>
 </tr>
 <tr class="even">
-<td><strong>group_by</strong></td>
-<td>Grouping variable for pseudobulk</td>
+<td align="left"><strong>group_by</strong></td>
+<td align="left">Grouping variable for pseudobulk</td>
 </tr>
 <tr class="odd">
-<td><strong>assay</strong></td>
-<td>Assay name for Seurat/SCE objects</td>
+<td align="left"><strong>assay</strong></td>
+<td align="left">Assay name for Seurat/SCE objects</td>
 </tr>
 <tr class="even">
-<td><strong>slot</strong></td>
-<td>Seurat slot (“data”, “counts”, “scale.data”)</td>
+<td align="left"><strong>slot</strong></td>
+<td align="left">Seurat slot (“data”, “counts”, “scale.data”)</td>
 </tr>
 <tr class="odd">
-<td><strong>verbose</strong></td>
-<td>Print progress messages</td>
+<td align="left"><strong>verbose</strong></td>
+<td align="left">Print progress messages</td>
 </tr>
 </tbody>
 </table>
-<p>For the simplest use case of PhenoMapR, impliment the following:</p>
+<p>For the simplest use case of PhenoMapR, implement the following:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Load PhenoMapR in your R session using:</span></span>
+<code class="sourceCode R"><span><span class="co"># Download PhenoMapR using the following:</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/install-deprecated.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"brooksbenard/PhenoMapR"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Load PhenoMapR in your R session:</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://brooksbenard.github.io/PhenoMapR">PhenoMapR</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Score samples in a bulk expression matrix</span></span>
@@ -228,12 +240,15 @@ PhenoMapR score can be generated using the pseudobulk argument.</p>
 <span>  assay <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="st">"Spatial"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">seurat_obj</span><span class="op">@</span><span class="va">assays</span><span class="op">)</span><span class="op">)</span> <span class="st">"Spatial"</span> <span class="kw">else</span> <span class="st">"RNA"</span>,</span>
 <span>  slot <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="st">"Spatial"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">seurat_obj</span><span class="op">@</span><span class="va">assays</span><span class="op">)</span><span class="op">)</span> <span class="st">"counts"</span> <span class="kw">else</span> <span class="st">"data"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<hr style="height:4px;border:none;color:#D3D3D3;background-color:#D3D3D3;">
 </div>
 <div class="section level2">
 <h2 id="supported-input-types">Supported Input Types<a class="anchor" aria-label="anchor" href="#supported-input-types"></a>
 </h2>
-<p>Each input type is summarized below; expand a section to see example
-code.</p>
+<p><code>PhenoMapR</code> is designed to work on a range of gene
+expression input formats. The primary requirement, regardless of input
+type, is that the expression data takes the form of
+<code>Genes (rownames) x Samples/Cells/Spots (colnames)</code>.</p>
 <details><summary><strong> Matrix/Data.frame</strong>
 </summary><p>Expression matrix: genes (rows) x samples/cells (columns).</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -296,37 +311,44 @@ expression.</p>
 <span>  reference <span class="op">=</span> <span class="st">"precog"</span>,</span>
 <span>  cancer_type <span class="op">=</span> <span class="st">"BRCA"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-</details>
+</details><hr style="height:4px;border:none;color:#D3D3D3;background-color:#D3D3D3;">
 </div>
 <div class="section level2">
 <h2 id="built-in-reference-datasets">Built-in Reference Datasets<a class="anchor" aria-label="anchor" href="#built-in-reference-datasets"></a>
 </h2>
-<p>Prognostic meta-z scores for adult, pediatric, and immunotherapy
-references in PhenoMapR are sourced from <strong>PRECOG 2.0</strong> (<a href="https://academic.oup.com/nar/article/54/D1/D1579/8324954" class="external-link">Benard
-et al., <em>Nucleic Acids Research</em> 2026</a>).</p>
-<p>Cancer types available for scoring in each built-in database (TCGA,
-Adult PRECOG, Pediatric PRECOG, ICI PRECOG). Use
-<code>list_cancer_types("precog")</code> (or <code>"tcga"</code>,
-<code>"pediatric_precog"</code>, <code>"ici_precog"</code>) to see
-labels for your reference of choice.</p>
+<p><code>PhenoMapR</code> comes pre-loaded with a comprehensive suite of
+pan-cancer meta-z signatures for gene expression and outcomes across
+adult, pediatric, and immunotherapy-treated cohorts. These databases are
+sourced from <strong>PRECOG 2.0</strong> (<a href="https://academic.oup.com/nar/article/54/D1/D1579/8324954" class="external-link">Benard
+et al., <em>Nucleic Acids Research</em> 2026</a>). PRECOG 2.0 includes
+335 cancer datasets with survival or response data for &gt;46,000
+patients, covering ~55 malignancies.</p>
+To see cancer types available for scoring in each built-in database
+(TCGA, Adult PRECOG, Pediatric PRECOG, ICI PRECOG), use
+<strong><code>list_cancer_types("precog")</code></strong> (or
+<code>"tcga"</code>, <code>"pediatric_precog"</code>,
+<code>"ici_precog"</code>) to see cancer labels for your reference of
+choice.
 <div class="reference-coverage-plot">
 <div class="float">
 <img src="../reference/figures/reference_coverage.png" alt="Reference coverage by database and cancer type"><div class="figcaption">Reference coverage by database and cancer
 type</div>
 </div>
 </div>
+<hr style="height:4px;border:none;color:#D3D3D3;background-color:#D3D3D3;">
 </div>
 <div class="section level2">
 <h2 id="under-the-hood">Under the hood<a class="anchor" aria-label="anchor" href="#under-the-hood"></a>
 </h2>
-<p>At a high level, PhenoMapR:</p>
+<p>At a high level, <code>PhenoMapR</code>:</p>
 <ul>
 <li>
 <strong>Processes the input gene expression data</strong> into a
-cleaned format by updating gene IDs and normalizing the expression.</li>
+cleaned format by updating gene IDs and normalizing the expression (if
+needed).</li>
 <li>
-<strong>Selects pan-cancer prognostic meta-z scores</strong> from
-PRECOG/TCGA based on input cancer type.</li>
+<strong>Selects pan-cancer prognostic meta-z score
+signatures</strong> from PRECOG/TCGA based on input cancer type.</li>
 <li>
 <strong>Filters to strongly prognostic genes</strong> (by |z-score|)
 and keeps intersecting genes between reference and query data.</li>
@@ -336,75 +358,39 @@ where weights are prognostic z-scores. Scores are computed almost
 instantly by taking the cross product of the expression matrix and
 z-score signature vector.</li>
 <li>
-<strong>Optionally defines prognostic groups and markers</strong>,
-by slicing the score distribution (e.g. top/bottom 5%) and running
-differential expression.</li>
+<strong>Optionally defines prognostic groups and markers</strong> by
+slicing the score distribution (e.g. top/bottom 5%) and running
+<code>Seurat::FindAllMArkers()</code>.</li>
 </ul>
 <div class="float">
 <img src="../reference/figures/PhenoMapR_schematic.png" alt="PhenoMapR schematic"><div class="figcaption">PhenoMapR schematic</div>
 </div>
-</div>
-<div class="section level2">
-<h2 id="vignettes">Vignettes<a class="anchor" aria-label="anchor" href="#vignettes"></a>
-</h2>
-<p>Detailed walkthroughs for the main uses of PhenoMapR (on the <a href="https://brooksbenard.github.io/PhenoMapR/articles/index.html">pkgdown
-site</a> and in the repo under <code>vignettes/</code> <a href="https://github.com/brooksbenard/PhenoMapR/tree/main/vignettes" class="external-link">here</a>):</p>
-<table class="table">
-<colgroup>
-<col width="43%">
-<col width="56%">
-</colgroup>
-<thead><tr class="header">
-<th>Vignette</th>
-<th>Description</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td><strong><a href="single-cell.html">Score Single-cell
-data</a></strong></td>
-<td>Score PAAD single cells (CRA001160) with <strong>TCGA</strong> and
-<strong>PRECOG</strong> Pancreatic references; scatterplot and boxplots
-by cell type; prognostic markers and proportion by sample. Data:
-expression H5 + CellMetainfo from Drive.</td>
-</tr>
-<tr class="even">
-<td><strong><a href="spatial-transcriptomics.html">Score Spatial
-transcriptomics data</a></strong></td>
-<td>Score spatial transcriptomics spots with PRECOG
-<strong>Pancreatic</strong>; score distributions, prognostic groups, and
-spatial maps of score and group on the tissue image.</td>
-</tr>
-<tr class="odd">
-<td><strong><a href="bulk-survival.html">Score bulk expression
-samples</a></strong></td>
-<td>Score 289 primary/metastatic bulk samples with PhenoMapR PRECOG
-references; stratify by primary vs metastatic;
-<strong>Kaplan–Meier</strong> survival by prognostic score. Data from
-Drive.</td>
-</tr>
-<tr class="even">
-<td><strong><a href="custom-reference.html">Generate and use a custom
-reference signature</a></strong></td>
-<td>Build a custom gene z-score reference from bulk expression and
-survival using <code><a href="../reference/derive_reference_from_bulk.html">derive_reference_from_bulk()</a></code>, then score
-samples with that reference.</td>
-</tr>
-</tbody>
-</table>
-<!-- **Vignette data:** The article datasets are hosted on [Google Drive](https://drive.google.com/drive/folders/1rKGZBX7sa_Iq8AJb1wcxiRc3oD6v6B5n) (too large for the repo). When you run or knit an article, missing files are downloaded automatically if the **googledrive** package is installed (e.g. `install.packages("PhenoMapR", dependencies = TRUE)`). You can also [download the files manually](https://drive.google.com/drive/folders/1rKGZBX7sa_Iq8AJb1wcxiRc3oD6v6B5n) into `vignettes/` and run from the package root. See `vignettes/README.md` in the repo for all options. -->
+<hr style="height:4px;border:none;color:#D3D3D3;background-color:#D3D3D3;">
 </div>
 <div class="section level2">
 <h2 id="advanced-usage">Advanced Usage<a class="anchor" aria-label="anchor" href="#advanced-usage"></a>
 </h2>
-<p>Although developed to provide a cancer-centric focus, PhenoMapR has
-some broad functionality that can be applied outside of cancer.</p>
+<p><code>PhenoMapR</code> was built with the primary goal of helping to
+quickly identify samples, cells, and spatial locations that might be
+most therapeutically relevant in cancer. It accomplishes this, in part,
+by incorporating the most comprehensive databases of gene expression
+associations with outcomes across cancers (TCGA and PRECOG). However,
+rare cancer types not included in TCGA/PRECOG and emerging immunotherapy
+datasets will provide valuable resources from which to derive robust
+prognostic signatures. To remain flexible in this evolving landscape, we
+provide functionality in <code>PhenoMapR</code> to use and derive custom
+reference signatures from proprietary and emerging bulk expression
+datasets.</p>
+<p><em>Additionally, although developed with a cancer-centric
+focus</em>, <code>PhenoMapR</code> has some broad functionality that can
+be applied outside of cancer.</p>
 <div class="section level3">
 <h3 id="custom-reference-data">Custom Reference Data<a class="anchor" aria-label="anchor" href="#custom-reference-data"></a>
 </h3>
-<p>Maybe you have a specific gene signature or pre-computed z-score
+<p>Maybe you have a specific gene signature or pre-computed gene z-score
 phenotype reference you would like to score against. Simply upload your
 custom reference signature (rownames are HUGO IDs and columns are
-z-scores).</p>
+z-scores) and score your input expression data.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create custom z-score reference</span></span>
 <span><span class="va">custom_ref</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
@@ -423,12 +409,12 @@ z-scores).</p>
 </h3>
 <p>If you have bulk expression (samples × genes) and a phenotype
 (e.g. clinical response (R/NR), time-to-survival (with censor), or any
-other continuous phenotype, the PhenoMapR
+other continuous phenotype), the <code>PhenoMapR</code>
 <strong><code><a href="../reference/derive_reference_from_bulk.html">derive_reference_from_bulk()</a></code></strong> function
 allows you to derive gene-level z-scores and use them as the reference
 for scoring bulk, single-cell, or spatial input data. The function
 cleans gene names to currently approved HUGO symbols, checks/normalizes
-expression, then computes association z-scores (Cox for survival,
+expression, then computes gene association z-scores (Cox for survival,
 logistic regression for binary, correlation for continuous).</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Bulk: samples in rows, genes in columns</span></span>
@@ -456,21 +442,23 @@ logistic regression for binary, correlation for continuous).</p>
 <code>survival</code> for Cox models.</p>
 </div>
 <div class="section level3">
-<h3 id="pseudobulk-aggregation">Pseudobulk Aggregation<a class="anchor" aria-label="anchor" href="#pseudobulk-aggregation"></a>
+<h3 id="pseudobulk-aggregation-and-scoring">Pseudobulk Aggregation and Scoring<a class="anchor" aria-label="anchor" href="#pseudobulk-aggregation-and-scoring"></a>
 </h3>
 <p>Many single-cell and spatial datasets include multiple samples. It is
-fair to assume that the cell/spot score distribution might be heavily
-weighted by the sample from which they came. To rank samples in a
-dataset based on their overall phenotype score, setting
-<strong><code>pseudobulk = TRUE</code></strong> and selecting the
-sample/patient metadata label will perform pseudobulking of cells/spots
-and perform the **<code>PhenoMap()**</code> function on the aggregate
-expression profile of each sample in the dataset. This may help identify
-if the most phenotypically relevant cells/spots in the dataset are
-enriched in samples with a phenotype skew (e.g. more adverse cells being
-enriched in more adversely prognostic patients).</p>
+fair to assume that the cell/spot score distribution across a dataset
+might be heavily skewed by the sample from which they came. To rank
+samples in a dataset based on their overall phenotype score, set
+<strong><code>pseudobulk = TRUE</code></strong> and select the
+sample/patient metadata label to perform pseudobulking of cells/spots.
+The <strong><code><a href="../reference/PhenoMap.html">PhenoMap()</a></code></strong> function will then score
+the aggregate expression profile of each sample in the dataset.
+<strong><code>plot_pseudobulk_scores()</code></strong> can be used to
+visualize the sample score distribution for your dataset. This may help
+identify if the most phenotypically relevant cells/spots in the dataset
+are enriched in samples with a phenotype skew (e.g. more adverse cells
+being enriched in more adversely prognostic patients).</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Aggregate single cells by patient before scoring</span></span>
+<code class="sourceCode R"><span><span class="co"># Aggregate single cells by sample to score samples rather than cells/spots</span></span>
 <span><span class="va">scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PhenoMap.html">PhenoMap</a></span><span class="op">(</span></span>
 <span>  <span class="va">seurat_obj</span>,</span>
 <span>  reference <span class="op">=</span> <span class="st">"tcga"</span>,</span>
@@ -482,9 +470,11 @@ enriched in more adversely prognostic patients).</p>
 <div class="section level3">
 <h3 id="normalize-scores">Normalize Scores<a class="anchor" aria-label="anchor" href="#normalize-scores"></a>
 </h3>
-<p>The weighted-sum scoring approach generates absolute values as
-output. The <strong><code><a href="../reference/normalize_scores.html">normalize_scores()</a></code></strong> function
-converts scores to a z-score for sample-level relative comparisons.</p>
+<p>The weighted-sum scoring approach of <code>PhenoMapR</code> generates
+absolute values as output. Negative scores reflect an overall favorable
+signature while positive scores reflect a more adverse signature. The
+<strong><code><a href="../reference/normalize_scores.html">normalize_scores()</a></code></strong> function converts
+PhenoMap scores to z-scores for sample-level relative comparisons.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scores_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PhenoMap.html">PhenoMap</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
 <span></span>
@@ -494,15 +484,27 @@ converts scores to a z-score for sample-level relative comparisons.</p>
 <div class="section level3">
 <h3 id="prognostic-groups-and-marker-genes">Prognostic Groups and Marker Genes<a class="anchor" aria-label="anchor" href="#prognostic-groups-and-marker-genes"></a>
 </h3>
-<p>Define the top and bottom 5% prognostic cells per dataset (adverse =
-highest scores, favorable = lowest) and find unique marker genes using
-<strong>Seurat’s FindMarkers</strong> (requires Seurat):</p>
+<p>A major advantage of <code>PhenoMapR</code> is the ability to
+rank-order all samples/cells/locations based on their PhenoMap score. To
+help characterize the samples/cells/spots that are most phenotypically
+relevant, we provide some high-level analysis functions:</p>
+<p>The <strong><code><a href="../reference/define_prognostic_groups.html">define_prognostic_groups()</a></code></strong> function
+uses a heuristic threshold that defines the top and bottom n% prognostic
+cells per dataset (adverse = highest scores, favorable = lowest). This
+function defaults to selecting the top and bottom 5th percentile to
+label as “adverse” and “favoable”, however the user can dynamically set
+this threshold based on their desired stringency.</p>
+<p>The <strong><code><a href="../reference/find_prognostic_markers.html">find_prognostic_markers()</a></code></strong> function
+takes the group labels from
+<strong><code><a href="../reference/define_prognostic_groups.html">define_prognostic_groups()</a></code></strong> and finds
+unique marker genes for those populations using <strong>Seurat’s
+FindMarkers</strong> (requires Seurat):</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Score and define groups (top 5% = adverse, bottom 5% = favorable)</span></span>
 <span><span class="va">scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PhenoMap.html">PhenoMap</a></span><span class="op">(</span><span class="va">seurat_obj</span>, reference <span class="op">=</span> <span class="st">"precog"</span>, cancer_type <span class="op">=</span> <span class="st">"BRCA"</span><span class="op">)</span></span>
 <span><span class="va">groups</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/define_prognostic_groups.html">define_prognostic_groups</a></span><span class="op">(</span><span class="va">scores</span>, percentile <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># One group column per score; values: "adverse", "favorable", "middle"</span></span>
+<span><span class="co"># One group column per score; values: "adverse", "favorable", "other"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">groups</span><span class="op">$</span><span class="va">prognostic_group_weighted_sum_score_precog_BRCA</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Find marker genes via Seurat::FindMarkers (adverse vs rest, favorable vs rest)</span></span>
@@ -514,15 +516,65 @@ highest scores, favorable = lowest) and find unique marker genes using
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">markers</span><span class="op">$</span><span class="va">adverse_markers</span><span class="op">)</span>   <span class="co"># genes enriched in top 5% (worst prognosis)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">markers</span><span class="op">$</span><span class="va">favorable_markers</span><span class="op">)</span> <span class="co"># genes enriched in bottom 5% (best prognosis)</span></span></code></pre></div>
+<hr style="height:4px;border:none;color:#D3D3D3;background-color:#D3D3D3;">
 </div>
+</div>
+<div class="section level2">
+<h2 id="vignettes">Vignettes<a class="anchor" aria-label="anchor" href="#vignettes"></a>
+</h2>
+<p>Detailed walkthroughs for the main uses of <code>PhenoMapR</code> (on
+the <a href="https://brooksbenard.github.io/PhenoMapR/articles/index.html">pkgdown
+site</a> and in the repo under <code>vignettes/</code> <a href="https://github.com/brooksbenard/PhenoMapR/tree/main/vignettes" class="external-link">here</a>):</p>
+<table class="table">
+<colgroup>
+<col width="43%">
+<col width="56%">
+</colgroup>
+<thead><tr class="header">
+<th>Vignette</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><strong><a href="single-cell.html">Score Single-cell
+data</a></strong></td>
+<td>Score a pancreatic cancer single cell dataset (CRA001160) with
+<strong>TCGA</strong> and <strong>PRECOG</strong> Pancreatic references;
+scatterplot and boxplots by cell type; prognostic markers and proportion
+by sample.</td>
+</tr>
+<tr class="even">
+<td><strong><a href="spatial-transcriptomics.html">Score Spatial
+transcriptomics data</a></strong></td>
+<td>Process a spatial transcriptomics sample from HTAN with PRECOG
+<strong>Pancreatic</strong>; score distributions, prognostic groups, and
+spatial maps of score and group on the tissue image.</td>
+</tr>
+<tr class="odd">
+<td><strong><a href="bulk-survival.html">Score bulk expression
+data</a></strong></td>
+<td>Score 289 primary/metastatic bulk samples with PhenoMapR PRECOG
+references; stratify by primary vs metastatic;
+<strong>Kaplan–Meier</strong> survival by prognostic score.</td>
+</tr>
+<tr class="even">
+<td><strong><a href="custom-reference.html">Generate and use a custom
+reference signature</a></strong></td>
+<td>Build a custom gene z-score reference from bulk expression and
+survival using <code><a href="../reference/derive_reference_from_bulk.html">derive_reference_from_bulk()</a></code>, then score
+samples with that reference.</td>
+</tr>
+</tbody>
+</table>
+<!-- **Vignette data:** The article datasets are hosted on [Google Drive](https://drive.google.com/drive/folders/1rKGZBX7sa_Iq8AJb1wcxiRc3oD6v6B5n) (too large for the repo). When you run or knit an article, missing files are downloaded automatically if the **googledrive** package is installed (e.g. `install.packages("PhenoMapR", dependencies = TRUE)`). You can also [download the files manually](https://drive.google.com/drive/folders/1rKGZBX7sa_Iq8AJb1wcxiRc3oD6v6B5n) into `vignettes/` and run from the package root. See `vignettes/README.md` in the repo for all options. --><hr style="height:4px;border:none;color:#D3D3D3;background-color:#D3D3D3;">
 </div>
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
 </h2>
-<p>If you use PhenoMapR, please cite the software and the reference
-datasets you use.</p>
+<p>If you use <code>PhenoMapR</code>, please cite the software and the
+reference datasets you use.</p>
 <p><strong>PhenoMapR (software)</strong><br>
-Benard B. PhenoMapR: map phenotypes from bulk gene expression onto
+Benard B. PhenoMapR: Phenotype mapping from bulk gene expression onto
 single cell, spatial, and bulk transcriptomics. <em>R package</em>. <a href="https://github.com/brooksbenard/PhenoMapR" class="external-link uri">https://github.com/brooksbenard/PhenoMapR</a>. See also
 <code>CITATION.cff</code> in the repository for machine-readable
 citation.</p>

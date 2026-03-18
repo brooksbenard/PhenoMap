@@ -16,5 +16,5 @@ Tutorials and worked examples with PhenoMapR.
   PhenoMapR](https://brooksbenard.github.io/PhenoMapR/articles/spatial-transcriptomics.md):
 - [Scoring bulk gene expression samples with
   PhenoMapR](https://brooksbenard.github.io/PhenoMapR/articles/bulk-survival.md):
-- [GSE205154: Custom survival-based reference with
-  derive_reference_from_bulk](https://brooksbenard.github.io/PhenoMapR/articles/custom-reference.md):
+- [Derive a custom reference signature with
+  PhenoMapR](https://brooksbenard.github.io/PhenoMapR/articles/custom-reference.md):

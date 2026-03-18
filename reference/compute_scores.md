@@ -16,3 +16,9 @@ compute_scores(
   verbose = TRUE
 )
 ```
+
+## Details
+
+This helper explicitly aligns gene IDs between `expression_data` and
+`prognostic_scores` so that the cross-product is always computed with a
+consistent gene order.
